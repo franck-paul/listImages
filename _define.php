@@ -11,8 +11,8 @@
 # -- END LICENSE BLOCK ------------------------------------
 
 $this->registerModule(
-	/* Name */				__("listImages"),
-	/* Description*/		__("List images from entries"),
+	/* Name */				"listImages",
+	/* Description*/		"List images from entries",
 	/* Author */			"Kozlika, Franck Paul",
 	/* Version */			'1.5.2',
 	/* Permissions */		'contentadmin'
