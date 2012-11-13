@@ -274,7 +274,7 @@ class tplEntryImages
 										// On utilise le titre du billet
 										$img_legend = $rs->post_title;
 										// La légende est liée au billet
-										$img_legend = '<a href="'.$rs->getURL().'" title="'.sprintf(__('Go to entry %s'),$img_legend).'">'.$img_legend.'</a>';
+										$img_legend = '<a class="link_entry" href="'.$rs->getURL().'" title="'.sprintf(__('Go to entry %s'),$img_legend).'">'.$img_legend.'</a>';
 									}
 								}
 								
@@ -315,7 +315,7 @@ class tplEntryImages
 											$href = $rs->getURL();
 											$href_title = html::escapeHTML($rs->post_title);
 										}
-										$res .= '<a href="'.$href.'" title="'.$href_title.'">';
+										$res .= '<a class="link_"'.$link.' href="'.$href.'" title="'.$href_title.'">';
 									}
 								}
 								
