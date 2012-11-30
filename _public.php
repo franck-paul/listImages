@@ -315,7 +315,7 @@ class tplEntryImages
 											$href = $rs->getURL();
 											$href_title = html::escapeHTML($rs->post_title);
 										}
-										$res .= '<a class="link_"'.$link.' href="'.$href.'" title="'.$href_title.'">';
+										$res .= '<a class="link_'.$link.'" href="'.$href.'" title="'.$href_title.'">';
 									}
 								}
 								
