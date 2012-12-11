@@ -66,7 +66,7 @@ class widgetEntryImages
 		$img_dim = $w->img_dim;
 
 		// Début d'affichage
-		$ret = '<div class="listimages-widget">';
+		$ret = ($w->content_only ? '' : '<div class="listimages-widget">');
 		$ret .= ($w->title ? '<h2>'.html::escapeHTML($w->title).'</h2>' : '');
 		$ret .= '<'.($html_tag == 'li' ? 'ul' : 'div').' class="listimages-wrapper">';
 		
@@ -77,7 +77,7 @@ class widgetEntryImages
 		
 		// Fin d'affichage
 		$ret .= '</'.($html_tag == 'li' ? 'ul' : 'div').'>'."\n";
-		$ret .= '</div>'."\n";
+		$ret .= ($w->content_only ? '' : '</div>'."\n");
 
 		return $ret;
 	}

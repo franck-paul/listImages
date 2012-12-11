@@ -51,6 +51,8 @@ class EntryImagesBehaviors
 
 		$w->EntryImages->setting('start',__('Start from'),'1');
 		$w->EntryImages->setting('length',__('Number (empty or 0 = all)'),'0');
+
+		$w->EntryImages->setting('content_only',__('Content only'),0,'check');
 	}
 }
 ?>
