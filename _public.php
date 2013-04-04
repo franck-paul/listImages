@@ -432,7 +432,12 @@ class tplEntryImages
 			if (file_exists($root.$info['dirname'].$base.'.'.strtoupper($info['extension']))) {
 				$media_info = getimagesize($root.$info['dirname'].$base.'.'.strtoupper($info['extension']));
 			} else {
-				$media_info = getimagesize($root.$info['dirname'].$base.'.'.$info['extension']);
+				if (file_exists($root.$info['dirname'].$base.'.'.$info['extension'])) {
+					$media_info = getimagesize($root.$info['dirname'].$base.'.'.$info['extension']);
+				} else {
+					// L'image originale n'est plus présente ou accessible
+					return false;
+				}
 			}
 		}
 		// Détermination de l'orientation de l'image
