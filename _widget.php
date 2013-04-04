@@ -30,7 +30,8 @@ class EntryImagesBehaviors
 		$w->EntryImages->setting('selected',__('Selected posts'),0,'check');
 
 		// Paramètres d'affichage
-		$w->EntryImages->setting('homeonly',__('Home page only'),1,'check');
+		$w->EntryImages->setting('homeonly',__('Display on:'),0,'combo',
+			array(__('All pages') => 0, __('Home page only') => 1, __('Except on home page') => 2));
 		$w->EntryImages->setting('size',__('Image size'),1,'combo',
 			array('thumbnail' => 't', 'square' => 'sq', 'small' => 's', 'medium' => 'm', 'original' => 'o'));
 		$w->EntryImages->setting('html_tag',__('HTML tag'),1,'combo',

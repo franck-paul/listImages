@@ -27,7 +27,8 @@ class widgetEntryImages
 		global $core;
 
 		// Si l'affichage du widget est demandé sur la page d'accueil uniquement et qu'on y est pas, on ressort
-		if ($w->homeonly && $core->url->type != 'default') {
+		if (($w->homeonly == 1 && $core->url->type != 'default') ||
+			($w->homeonly == 2 && $core->url->type == 'default')) {
 			return;
 		}
 
