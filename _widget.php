@@ -10,7 +10,7 @@
 #
 # -- END LICENSE BLOCK ------------------------------------
 
-$core->addBehavior('initWidgets',array('EntryImagesBehaviors','initWidgets'));
+$GLOBALS['core']->addBehavior('initWidgets',array('EntryImagesBehaviors','initWidgets'));
 
 class EntryImagesBehaviors
 {
