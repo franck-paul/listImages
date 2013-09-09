@@ -405,7 +405,12 @@ class tplEntryImages
 		}
 		
 		$res = false;
-		if ($size != 'o' && file_exists($root.$info['dirname'].'.'.$base.'_'.$size.'.jpg')) {
+		if ($size != 'o' && file_exists($root.$info['dirname'].'.'.$base.'_'.$size.'.png')) {
+			// Une miniature au format demandé a été trouvée
+			$res = '.'.$base.'_'.$size.'.png';
+			//Récupération des dimensions de la miniature
+			$media_info = getimagesize($root.$info['dirname'].$res);
+		} elseif ($size != 'o' && file_exists($root.$info['dirname'].'.'.$base.'_'.$size.'.jpg')) {
 			// Une miniature au format demandé a été trouvée
 			$res = '.'.$base.'_'.$size.'.jpg';
 			//Récupération des dimensions de la miniature
