@@ -14,7 +14,7 @@ $this->registerModule(
 	/* Name */				"listImages",
 	/* Description*/		"List images from entries",
 	/* Author */			"Kozlika, Franck Paul",
-	/* Version */			'1.7.1',
+	/* Version */			'1.7.2',
 	/* Permissions */		'contentadmin'
 );
 ?>
