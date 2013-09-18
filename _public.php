@@ -65,6 +65,7 @@ class widgetEntryImages
 		$class = $w->class;
 		$alt = $w->alt;
 		$img_dim = $w->img_dim;
+		$def_size = $w->def_size;
 
 		// Début d'affichage
 		$ret = ($w->content_only ? '' : '<div class="listimages-widget">');
@@ -73,7 +74,9 @@ class widgetEntryImages
 		
 		// Appel de la fonction de traitement pour chacun des billets
 		while ($rs->fetch()) {
-			$ret .= tplEntryImages::EntryImagesHelper($size, $html_tag, $link, $exif, $legend, $bubble, $from, $start, $length, $class, $alt, $img_dim, $rs);
+			$ret .= tplEntryImages::EntryImagesHelper(
+				$size, $html_tag, $link, $exif, $legend, $bubble,
+				$from, $start, $length, $class, $alt, $img_dim, $def_size, $rs);
 		}
 		
 		// Fin d'affichage
@@ -99,6 +102,7 @@ class widgetEntryImages
 		class : ajoutée à la balise <img />
 		alt : none, inherit
 		img_dim : ajoute les dimensions de l'image
+		def_size : sq, o (défaut), none
 
 	Non développés (pour l'instant, peut-être, chépô, etc) :
 		exif : 0 (défaut), 1
@@ -128,6 +132,7 @@ class tplEntryImages
 			class : ajoutée à la balise <img />
 			alt : none, inherit (defaut)
 			img_dim : ajoute les dimensions de l'image
+			def_size : taille d'image à retourner par défaut -> sq, o (défaut), none
 	*/
 	public static function EntryImages($attr)
 	{
@@ -144,6 +149,7 @@ class tplEntryImages
 		$class = isset($attr['class']) ? trim($attr['class']) : '';
 		$alt = isset($attr['alt']) ? trim($attr['alt']) : 'inherit';
 		$img_dim = isset($attr['img_dim']) ? trim($attr['img_dim']) : 'none';
+		$def_size = isset($attr['def_size']) ? trim($attr['def_size']) : '';
 
 		return "<?php echo tplEntryImages::EntryImagesHelper(".
 			"'".addslashes($size)."', ".
@@ -157,7 +163,8 @@ class tplEntryImages
 			$length.", ".
 			"'".addslashes($class)."', ".
 			"'".addslashes($alt)."', ".
-			"'".addslashes($img_dim)."'".
+			"'".addslashes($img_dim)."', ".
+			"'".addslashes($def_size)."'".
 			"); ?>";
 	}
 
@@ -166,7 +173,7 @@ class tplEntryImages
 
 	// Fonction de génération de la liste des images ciblées par la balise template
 	public static function EntryImagesHelper($size, $html_tag, $link, $exif, $legend, $bubble, $from, $start, $length,
-		$class, $alt, $img_dim, $rs = null)
+		$class, $alt, $img_dim, $def_size, $rs = null)
 	{
 		global $core, $_ctx;
 		
@@ -194,6 +201,9 @@ class tplEntryImages
 		}
 		if (!preg_match('/^none|inherit$/',$alt)) {
 			$alt = 'inherit';
+		}
+		if (!preg_match('/^sq|o|none$/',$def_size)) {
+			$def_size = 'o';
 		}
 		$start = ((int)$start > 0 ? (int)$start - 1 : 0);
 		$length = ((int)$length > 0 ? (int)$length : 0);
@@ -251,7 +261,7 @@ class tplEntryImages
 							// Recherche de l'image au format demandé
 							$sens = '';
 							$dim = '';
-							if (($src_img = self::ContentImageLookup($p_root,$i,$size,$sens,$dim,$sizes)) !== false) {
+							if (($src_img = self::ContentImageLookup($p_root,$i,$size,$sens,$dim,$sizes,$def_size)) !== false) {
 
 								// L'image existe, on construit son URL
 								$src_img = $p_url.(dirname($i) != '/' ? dirname($i) : '').'/'.$src_img;
@@ -390,7 +400,7 @@ class tplEntryImages
 	}
 
 	// Fonction utilitaire de recherche d'une image selon un format spécifié (indique aussi l'orientation)
-	private static function ContentImageLookup($root, $img, $size, &$sens, &$dim, $sizes)
+	private static function ContentImageLookup($root, $img, $size, &$sens, &$dim, $sizes, $def_size)
 	{
 		// Récupération du nom et de l'extension de l'image source
 		$info = path::info($img);
@@ -417,6 +427,16 @@ class tplEntryImages
 			$media_info = getimagesize($root.$info['dirname'].$res);
 		}
 		else {
+
+			// Recherche d'alternative
+			if ($def_size == 'none') {
+				// Pas d'alternative demandée
+				return false;
+			} elseif ($def_size == 'sq') {
+				// Alternative square est demandée
+				return self::ContentImageLookup($root,$img,'sq',$sens,$dim,$sizes,'none');
+			}
+
 			// Recherche l'image originale
 			$f = $root.$info['dirname'].$base;
 			if (file_exists($f.'.'.$info['extension'])) {

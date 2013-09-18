@@ -34,6 +34,8 @@ class EntryImagesBehaviors
 			array(__('All pages') => 0, __('Home page only') => 1, __('Except on home page') => 2));
 		$w->EntryImages->setting('size',__('Image size'),1,'combo',
 			array('thumbnail' => 't', 'square' => 'sq', 'small' => 's', 'medium' => 'm', 'original' => 'o'));
+		$w->EntryImages->setting('def_size',__('Default image size'),1,'combo',
+			array('square' => 'sq', 'original' => 'o', 'none' => 'none'));
 		$w->EntryImages->setting('html_tag',__('HTML tag'),1,'combo',
 			array('span' => 'span', 'list' => 'li', 'div' => 'div', 'none' => 'none'));
 		$w->EntryImages->setting('link',__('Image link'),1,'combo',
