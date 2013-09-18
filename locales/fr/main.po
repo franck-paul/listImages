@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Dotclear 2 listImages module\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-05 17:18+0100\n"
+"POT-Creation-Date: 2013-09-18 17:32+0200\n"
 "PO-Revision-Date: 2012-11-05 17:21+0100\n"
 "Last-Translator: Franck Paul <carnet.franck.paul@gmail.com>\n"
 "Language-Team: \n"
@@ -15,12 +15,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.5.4\n"
-
-msgid "listImages"
-msgstr "listImages"
-
-msgid "List images from entries"
-msgstr "Lister les images des billets"
 
 #, php-format
 msgid "Go to entry %s"
@@ -39,6 +33,10 @@ msgid "Selected posts"
 msgstr "Billets sélectionnés"
 
 msgid "Image size"
+msgstr "Taille de l'image"
+
+#, fuzzy
+msgid "Default image size"
 msgstr "Taille de l'image"
 
 msgid "HTML tag"
@@ -70,3 +68,9 @@ msgstr "Démarrer à"
 
 msgid "Number (empty or 0 = all)"
 msgstr "Nombre d'image à trouver (vide ou 0 = toutes)"
+
+#~ msgid "listImages"
+#~ msgstr "listImages"
+
+msgid "List images from entries"
+msgstr "Lister les images des billets"

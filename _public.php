@@ -34,21 +34,21 @@ class widgetEntryImages
 
 		// Mise en place des paramètres de recherche par défaut
 		$params['no_content'] = false;
-		
+
 		// Récupération de la limite du nb de billets dans lesquels rechercher des images
 		$params['limit'] = abs((integer) $w->limit);
-		
+
 		// Récupération de la ou des catégories spécifiées
 		if ($w->category != '') {
 			$category  = $w->category;
 			$params['cat_url'] = explode(",", $category);
 		}
-		
+
 		// Récupération de l'indicateur de billet sélectionné
 		if ($w->selected == '1') {
 			$params['post_selected'] = '1';
 		}
-		
+
 		// Recherche des billets correspondants
 		$rs = $core->blog->getPosts($params);
 
@@ -71,14 +71,14 @@ class widgetEntryImages
 		$ret = ($w->content_only ? '' : '<div class="listimages-widget">');
 		$ret .= ($w->title ? '<h2>'.html::escapeHTML($w->title).'</h2>' : '');
 		$ret .= '<'.($html_tag == 'li' ? 'ul' : 'div').' class="listimages-wrapper">';
-		
+
 		// Appel de la fonction de traitement pour chacun des billets
 		while ($rs->fetch()) {
 			$ret .= tplEntryImages::EntryImagesHelper(
 				$size, $html_tag, $link, $exif, $legend, $bubble,
 				$from, $start, $length, $class, $alt, $img_dim, $def_size, $rs);
 		}
-		
+
 		// Fin d'affichage
 		$ret .= '</'.($html_tag == 'li' ? 'ul' : 'div').'>'."\n";
 		$ret .= ($w->content_only ? '' : '</div>'."\n");
@@ -176,7 +176,7 @@ class tplEntryImages
 		$class, $alt, $img_dim, $def_size, $rs = null)
 	{
 		global $core, $_ctx;
-		
+
 		// Contrôle des valeurs fournies et définition de la valeur par défaut pour les attributs
 		$media = new dcMedia($core);
 		$sizes = implode('|',array_keys($media->thumb_sizes));
@@ -227,7 +227,7 @@ class tplEntryImages
 
 		// Buffer de retour
 		$res = '';
-		
+
 		// Si aucune liste de billet n'est fournie en paramètre, on utilise le contexte courant
 		if (is_null($rs)) {
 			$rs = $_ctx->posts;
@@ -288,7 +288,7 @@ class tplEntryImages
 										$img_legend = '<a class="link_entry" href="'.$rs->getURL().'" title="'.sprintf(__('Go to entry %s'),$img_legend).'">'.$img_legend.'</a>';
 									}
 								}
-								
+
 								if ($bubble != 'none') {
 									// Un titre d'image est requis
 									if ($bubble == 'image') {
@@ -329,7 +329,7 @@ class tplEntryImages
 										$res .= '<a class="link_'.$link.'" href="'.$href.'" title="'.$href_title.'">';
 									}
 								}
-								
+
 								// Gestion option alt : inherit / none
 								if ($alt == 'none') $img_alt = '';
 
@@ -393,7 +393,7 @@ class tplEntryImages
 				}
 			}
 		}
-				
+
 		if ($res) {
 			return $res;
 		}
@@ -408,12 +408,12 @@ class tplEntryImages
 
 		if (substr($info['dirname'],-1) != '/') $info['dirname'] .= '/';
 		if (substr($root,-1) != '/') $root .= '/';
-		
+
 		// Suppression du suffixe rajouté pour la création des miniatures s'il existe dans le nom de l'image
 		if (preg_match('/^\.(.+)_('.$sizes.')$/',$base,$m)) {
 			$base = $m[1];
 		}
-		
+
 		$res = false;
 		if ($size != 'o' && file_exists($root.$info['dirname'].'.'.$base.'_'.$size.'.png')) {
 			// Une miniature au format demandé a été trouvée
@@ -471,7 +471,7 @@ class tplEntryImages
 		if (!$dim) {
 			$dim = $media_info;
 		}
-		
+
 		if ($res) {
 			return $res;
 		}

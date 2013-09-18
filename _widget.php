@@ -14,11 +14,11 @@ $GLOBALS['core']->addBehavior('initWidgets',array('EntryImagesBehaviors','initWi
 
 class EntryImagesBehaviors
 {
-	
+
 	public static function initWidgets($w)
 	{
 		global $core;
-		
+
 		$w->create('EntryImages',__('List entry images'),array('widgetEntryImages','EntryImages'));
 
 		// Titre du widget
