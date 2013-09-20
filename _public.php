@@ -320,7 +320,7 @@ class tplEntryImages
 										// Si un lien est requis
 										if ($link == 'image') {
 											// Lien vers l'image originale
-											$href = self::ContentImageLookup($p_root,$i,"o",$sens,$dim,$sizes);
+											$href = self::ContentImageLookup($p_root,$i,"o",$sens,$dim,$sizes,'o');
 											$href = $p_url.(dirname($i) != '/' ? dirname($i) : '').'/'.$href;
 											$href_title = $img_alt;
 										} else {
@@ -402,7 +402,7 @@ class tplEntryImages
 	}
 
 	// Fonction utilitaire de recherche d'une image selon un format spécifié (indique aussi l'orientation)
-	private static function ContentImageLookup($root, $img, $size, &$sens, &$dim, $sizes, $def_size)
+	private static function ContentImageLookup($root, $img, $size, &$sens, &$dim, $sizes, $def_size='o')
 	{
 		// Récupération du nom et de l'extension de l'image source
 		$info = path::info($img);
