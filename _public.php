@@ -322,7 +322,14 @@ class tplEntryImages
 											// Lien vers l'image originale
 											$href = self::ContentImageLookup($p_root,$i,"o",$sens,$dim,$sizes,'o');
 											$href = $p_url.(dirname($i) != '/' ? dirname($i) : '').'/'.$href;
-											$href_title = $img_alt;
+											switch ($bubble) {
+												case 'entry' :
+													$href_title = html::escapeHTML($rs->post_title);
+												case 'image' :
+												default :
+													$href_title = $img_alt;
+													break;
+											}
 										} else {
 											// Lien vers le billet d'origine
 											$href = $rs->getURL();
