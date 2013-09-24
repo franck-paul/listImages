@@ -12,5 +12,8 @@
 
 if (!defined('DC_CONTEXT_ADMIN')) { return; }
 
+// dead but useful code, in order to have translations
+__('listImages').__('List images from entries');
+
 require dirname(__FILE__).'/_widget.php';
 ?>
