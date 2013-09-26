@@ -111,7 +111,7 @@ class widgetEntryImages
 */
 
 // Déclaration de la balise {{tpl:EntryImages}}
-$GLOBALS['core']->tpl->addValue('EntryImages',array('tplEntryImages','EntryImages'));
+$core->tpl->addValue('EntryImages',array('tplEntryImages','EntryImages'));
 
 class tplEntryImages
 {
@@ -487,4 +487,3 @@ class tplEntryImages
 		return false;
 	}
 }
-?>

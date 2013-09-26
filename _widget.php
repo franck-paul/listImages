@@ -12,7 +12,7 @@
 
 if (!defined('DC_RC_PATH')) { return; }
 
-$GLOBALS['core']->addBehavior('initWidgets',array('EntryImagesBehaviors','initWidgets'));
+$core->addBehavior('initWidgets',array('EntryImagesBehaviors','initWidgets'));
 
 class EntryImagesBehaviors
 {
@@ -60,4 +60,3 @@ class EntryImagesBehaviors
 		$w->EntryImages->setting('content_only',__('Content only'),0,'check');
 	}
 }
-?>
