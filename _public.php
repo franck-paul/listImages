@@ -325,6 +325,7 @@ class tplEntryImages
 											switch ($bubble) {
 												case 'entry' :
 													$href_title = html::escapeHTML($rs->post_title);
+													break;
 												case 'image' :
 												default :
 													$href_title = $img_alt;
