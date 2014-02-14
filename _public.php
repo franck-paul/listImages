@@ -71,7 +71,7 @@ class widgetEntryImages
 
 		// Début d'affichage
 		$ret = ($w->content_only ? '' : '<div class="listimages-widget">');
-		$ret .= ($w->title ? '<h2>'.html::escapeHTML($w->title).'</h2>' : '');
+		$ret .= ($w->title ? $w->renderTitle(html::escapeHTML($w->title)) : '');
 		$ret .= '<'.($html_tag == 'li' ? 'ul' : 'div').' class="listimages-wrapper">';
 
 		// Appel de la fonction de traitement pour chacun des billets
