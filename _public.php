@@ -70,8 +70,7 @@ class widgetEntryImages
 		$def_size = $w->def_size;
 
 		// Début d'affichage
-		$ret = ($w->content_only ? '' : '<div class="listimages-widget">');
-		$ret .= ($w->title ? $w->renderTitle(html::escapeHTML($w->title)) : '');
+		$ret = ($w->title ? $w->renderTitle(html::escapeHTML($w->title)) : '');
 		$ret .= '<'.($html_tag == 'li' ? 'ul' : 'div').' class="listimages-wrapper">';
 
 		// Appel de la fonction de traitement pour chacun des billets
@@ -83,9 +82,8 @@ class widgetEntryImages
 
 		// Fin d'affichage
 		$ret .= '</'.($html_tag == 'li' ? 'ul' : 'div').'>'."\n";
-		$ret .= ($w->content_only ? '' : '</div>'."\n");
 
-		return $ret;
+		return $w->renderDiv($w->content_only,'listimages-widget '.$w->class,'',$ret);
 	}
 }
 
