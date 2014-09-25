@@ -350,7 +350,7 @@ class tplEntryImages
 								}
 								// Mise en place des dimensions de l'image si demandé
 								if ($img_dim <> 'none') {
-									$res .= 'width="'.$dim[0].'px" height="'.$dim[1].'px" ';
+									$res .= 'width="'.$dim[0].'" height="'.$dim[1].'" ';
 								}
 								$res .= 'alt="'.$img_alt.'" '.($img_title == '' ? '' : 'title="'.$img_title.'" ').'/>';
 
