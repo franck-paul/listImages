@@ -205,9 +205,6 @@ class tplEntryImages
 		if (!preg_match('/^sq|o|none$/',$def_size)) {
 			$def_size = 'o';
 		}
-		if (!preg_match('/^0|1$/',$img_dim)) {
-			$def_size = '0';
-		}
 		$start = ((int)$start > 0 ? (int)$start - 1 : 0);
 		$length = ((int)$length > 0 ? (int)$length : 0);
 
@@ -351,8 +348,8 @@ class tplEntryImages
 								if ($class != '') {
 									$res .= 'class="'.html::escapeHTML($class).'" ';
 								}
-								// Mise en place des dimensions de l'image si demandé
-								if ($img_dim <> '0') {
+								// Mise en place des dimensions de l'image si pas explicitement exclu
+								if ($img_dim <> 'none') {
 									$res .= 'width="'.$dim[0].'" height="'.$dim[1].'" ';
 								}
 								$res .= 'alt="'.$img_alt.'" '.($img_title == '' ? '' : 'title="'.$img_title.'" ').'/>';

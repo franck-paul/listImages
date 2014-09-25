@@ -9,7 +9,7 @@ Ce plugin crée une seule balise template {{tpl:EntryImages}} à utiliser dans v
 
 Par défaut,
 	{{tpl:EntryImages}}
-est équivalent à 
+est équivalent à
 	{{tpl:EntryImages size="t" html_tag="span" link="image" from="full" legend="none" start="1" length="0" bubble="image" alt="inherit" img_dim="0" class="" def_size="o"}}
 
 
@@ -24,7 +24,7 @@ Valeurs possibles : sq (square), t (thumbnail), s (small), m (medium), o (origin
 Balisage html pour chaque item.
 Valeurs possibles : span (élément), li (élément de liste), div (boîte), none (aucune balise)
 	Classe CSS : une classe "portrait" ou "landscape" sera ajoutée à cette balise en fonction du sens de l'image.
-	Attention si vous choisissez li, pensez à placer en début et fin de boucle la balise html englobante (ul ou ol) ; si vous choisissez span, pensez à placer en début et fin de boucle la balise html englobante (p). 
+	Attention si vous choisissez li, pensez à placer en début et fin de boucle la balise html englobante (ul ou ol) ; si vous choisissez span, pensez à placer en début et fin de boucle la balise html englobante (p).
 
 * link
 Cible du lien posé sur chaque image.
@@ -39,7 +39,7 @@ Ajout d'une légende.
 Valeurs possibles : entry (titre du billet d'origine avec lien), image (title s'il existe, sinon alt s'il existe, sinon légende vide), none (pas de légende)
 	Si la valeur choisie pour html_tag est div, alors la légende est placée dans un <p class="legend"></p> et l'ensemble image + légende est placé dans un <div class="outer_portrait|outer-landscape"></div>.
 	Si la valeur choisie pour html_tag est span ou li, alors la légende est précédée d'un retour à la ligne (<br />) et placée dans un <span class="legend"></span>.
-	
+
 * bubble
 Définit le titre positionné pour l'image.
 Valeurs possibles : entry (titre du billet d'origine), image (titre de l'image s'il existe), none (pas de titre)
@@ -64,7 +64,7 @@ Valeurs possibles : none (aucun), inherit (standard)
 
 * img_dim
 Inclusion des dimensions de l'image en pixel (il s'agit des dimensions de l'image affichée)
-Valeurs possibles : 0 (non), 1 (oui)
+Valeurs possibles : none (non), autre chose que none (oui)
 
 * def_size
 Indique l'image alternative à retourner si le format désiré n'est pas disponible : sq (square), o (originale), none (aucune)
@@ -91,12 +91,12 @@ Par exemple pour créer rapidement un catalogue de toutes vos photographies (et 
 			</p>
 			</div>
 			<!-- ajout recommandé si les images sont présentées en blocs flottants -->
-			<hr class="clearer" /> 
+			<hr class="clearer" />
 		</tpl:EntriesFooter>
 	</tpl:Entries>
 
 
-	
+
 Cas 2. – Afficher la première image de chaque billet au format small avec un lien vers le billet d'origine et le titre du billet en légende :
 ---------------------------------------------------------------------------------------------------------------------------------------------
 Par exemple pour présenter un portfolio de réalisations ou des archives.
@@ -109,7 +109,7 @@ Par exemple pour présenter un portfolio de réalisations ou des archives.
 	<tpl:EntriesFooter>
 		</div>
 		<!-- ajout recommandé si les images sont présentées en blocs flottants -->
-		<hr class="clearer" /> 
+		<hr class="clearer" />
 	</tpl:EntriesFooter>
 	</tpl:Entries>
 
@@ -128,7 +128,7 @@ Classes générées par le plugin :
 	Affectée à la div englobant l'image et la légende si l'on a choisi "div" pour l'attribut html_tag et "entry" ou "image" pour l'attribut legend.
 * "legend"
 	Affectée au span ou au p englobant la légende.
-	
+
 Recommandation :
 Pour styler plus aisément les séries d'images générées par EntryImages, il est souhaitable d'affecter une class au bloc les contenant toutes (ex. class="entryimages").
 
@@ -144,7 +144,7 @@ Exemple de styles pour le cas 1 ci-dessus :
 	margin: 0;
 	display: block;
 	float: left;
-	}	
+	}
 .post.entryimages span.landscape a {
 	display: block;
 	padding: 21px 8px 20px 8px;
@@ -180,7 +180,7 @@ hr.clearer {
 	background: transparent;
 	border: none;
 	clear: both;
-	}	
+	}
 
 
 Exemple de styles pour le cas 2 ci-dessus :
@@ -195,7 +195,7 @@ Exemple de styles pour le cas 2 ci-dessus :
 .post.entryimages img {
 	border: 1px solid #fff;
 	}
-.outer_landscape, .outer_portrait { 
+.outer_landscape, .outer_portrait {
 	width: 260px;
 	height: 280px;
 	float: left;
@@ -220,7 +220,7 @@ hr.clearer {
 	background: transparent;
 	border: none;
 	clear: both;
-	}	
+	}
 
 
 OPTION DU PLUGIN (envisagée)
