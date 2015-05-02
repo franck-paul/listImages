@@ -16,9 +16,13 @@ $this->registerModule(
 	/* Name */				"listImages",
 	/* Description*/		"List images from entries",
 	/* Author */			"Kozlika, Franck Paul",
-	/* Version */			'1.10',
+	/* Version */			'1.11',
+	/* Properties */
 	array(
-		/* Permissions */	'permissions' =>	'contentadmin',
-		/* Type */			'type' =>			'plugin'
-	)
+		'permissions' => 'contentadmin',
+		'type' => 'plugin',
+		'dc_min' => '2.7',
+		'support' => 'http://forum.dotclear.org/viewforum.php?id=16',
+		'details' => 'http://plugins.dotaddict.org/dc2/details/listImages'
+		)
 );

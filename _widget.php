@@ -21,7 +21,9 @@ class EntryImagesBehaviors
 	{
 		global $core;
 
-		$w->create('EntryImages',__('List entry images'),array('widgetEntryImages','EntryImages'));
+		$w->create('EntryImages',__('List entry images'),array('widgetEntryImages','EntryImages'),
+			null,
+			__('List entry images by listImages plugin'));
 
 		// Titre du widget
 		$w->EntryImages->setting('title',__('Title:'),__('Last images'));
@@ -43,7 +45,7 @@ class EntryImagesBehaviors
 		$w->EntryImages->setting('link',__('Image link'),1,'combo',
 			array('image' => 'image', 'entry' => 'entry', 'none' => 'none'));
 		$w->EntryImages->setting('from',__('Search image in'),1,'combo',
-			array('content and excerpt' => 'full', 'excerpt only' => 'excerpt', 'content only' => 'content'));
+			array(__('content and excerpt') => 'full', __('excerpt only') => 'excerpt', __('content only') => 'content'));
 		$w->EntryImages->setting('legend',__('Legend'),1,'combo',
 			array('none' => 'none', 'image' => 'image', 'entry' => 'entry'));
 		$w->EntryImages->setting('bubble',__('Image title'),1,'combo',
@@ -58,5 +60,6 @@ class EntryImagesBehaviors
 
 		$w->EntryImages->setting('content_only',__('Content only'),0,'check');
 		$w->EntryImages->setting('class',__('CSS Class'),'','text');
+		$w->EntryImages->setting('offline',__('Offline'),0,'check');
 	}
 }
