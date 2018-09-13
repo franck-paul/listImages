@@ -13,7 +13,7 @@
 
 if (!defined('DC_RC_PATH')) {return;}
 
-$core->addBehavior('initWidgets', array('EntryImagesBehaviors', 'initWidgets'));
+$core->addBehavior('initWidgets', ['EntryImagesBehaviors', 'initWidgets']);
 
 class EntryImagesBehaviors
 {
@@ -22,7 +22,7 @@ class EntryImagesBehaviors
     {
         global $core;
 
-        $w->create('EntryImages', __('List entry images'), array('widgetEntryImages', 'EntryImages'),
+        $w->create('EntryImages', __('List entry images'), ['widgetEntryImages', 'EntryImages'],
             null,
             __('List entry images by listImages plugin'));
 
@@ -36,24 +36,24 @@ class EntryImagesBehaviors
 
         // Paramètres d'affichage
         $w->EntryImages->setting('homeonly', __('Display on:'), 0, 'combo',
-            array(__('All pages') => 0, __('Home page only') => 1, __('Except on home page') => 2));
+            [__('All pages') => 0, __('Home page only') => 1, __('Except on home page') => 2]);
         $w->EntryImages->setting('size', __('Image size'), 1, 'combo',
-            array('thumbnail' => 't', 'square' => 'sq', 'small' => 's', 'medium' => 'm', 'original' => 'o'));
+            ['thumbnail' => 't', 'square' => 'sq', 'small' => 's', 'medium' => 'm', 'original' => 'o']);
         $w->EntryImages->setting('def_size', __('Default image size'), 1, 'combo',
-            array('square' => 'sq', 'original' => 'o', 'none' => 'none'));
+            ['square' => 'sq', 'original' => 'o', 'none' => 'none']);
         $w->EntryImages->setting('html_tag', __('HTML tag'), 1, 'combo',
-            array('span' => 'span', 'list' => 'li', 'div' => 'div', 'none' => 'none'));
+            ['span' => 'span', 'list' => 'li', 'div' => 'div', 'none' => 'none']);
         $w->EntryImages->setting('link', __('Image link'), 1, 'combo',
-            array('image' => 'image', 'entry' => 'entry', 'none' => 'none'));
+            ['image' => 'image', 'entry' => 'entry', 'none' => 'none']);
         $w->EntryImages->setting('from', __('Search image in'), 1, 'combo',
-            array(__('content and excerpt') => 'full', __('excerpt only') => 'excerpt', __('content only') => 'content'));
+            [__('content and excerpt') => 'full', __('excerpt only') => 'excerpt', __('content only') => 'content']);
         $w->EntryImages->setting('legend', __('Legend'), 1, 'combo',
-            array('none' => 'none', 'image' => 'image', 'entry' => 'entry'));
+            ['none' => 'none', 'image' => 'image', 'entry' => 'entry']);
         $w->EntryImages->setting('bubble', __('Image title'), 1, 'combo',
-            array('none' => 'none', 'image' => 'image', 'entry' => 'entry'));
+            ['none' => 'none', 'image' => 'image', 'entry' => 'entry']);
 
         $w->EntryImages->setting('alt', __('Alt attribute'), 1, 'combo',
-            array('inherit' => 'inherit', 'none' => 'none'));
+            ['inherit' => 'inherit', 'none' => 'none']);
         $w->EntryImages->setting('img_dim', __('Includes width and height of image'), 0, 'check');
 
         $w->EntryImages->setting('start', __('Start from'), '1');

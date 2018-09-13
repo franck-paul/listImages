@@ -115,7 +115,7 @@ exif : 0 (défaut), 1
  */
 
 // Déclaration de la balise {{tpl:EntryImages}}
-$core->tpl->addValue('EntryImages', array('tplEntryImages', 'EntryImages'));
+$core->tpl->addValue('EntryImages', ['tplEntryImages', 'EntryImages']);
 
 class tplEntryImages
 {
