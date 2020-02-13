@@ -17,10 +17,10 @@ $this->registerModule(
     "listImages",               // Name
     "List images from entries", // Description
     "Kozlika, Franck Paul",     // Author
-    '1.12',                     // Version
+    '1.13',                     // Version
                                 // Properties
     [
-        'requires'    => [['core', '2.13']], // Dependencies
+        'requires'    => [['core', '2.16']], // Dependencies
         'permissions' => 'contentadmin',
         'type'        => 'plugin',
         'support'     => 'http://forum.dotclear.org/viewforum.php?id=16',
