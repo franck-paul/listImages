@@ -228,7 +228,7 @@ class tplEntryImages
         // -> à noter que seules les images locales sont traitées
         $p_site       = preg_replace('#^(.+?//.+?)/(.*)$#', '$1', $core->blog->url);
         $pattern_path = '(?:' . preg_quote($p_site, '/') . ')?' . preg_quote($p_url, '/');
-        $pattern_src  = sprintf('/src="%s(.*?\.(?:jpg|jpeg|gif|png|JPEG|JPG|GIF|PNG))"/msu', $pattern_path);
+        $pattern_src  = sprintf('/src="%s(.*?\.(?:jpg|jpeg|gif|png|svg|webp|JPEG|JPG|GIF|PNG|SVG|WEBP))"/msu', $pattern_path);
 
         // Buffer de retour
         $res = '';
@@ -454,6 +454,11 @@ class tplEntryImages
             $res = '.' . $base . '_' . $size . '.jpg';
             //Récupération des dimensions de la miniature
             $media_info = getimagesize($root . $info['dirname'] . $res);
+        } elseif ($size != 'o' && file_exists($root . $info['dirname'] . '.' . $base . '_' . $size . '.webp')) {
+            // Une miniature au format demandé a été trouvée
+            $res = '.' . $base . '_' . $size . '.webp';
+            //Récupération des dimensions de la miniature
+            $media_info = getimagesize($root . $info['dirname'] . $res);
         } else {
 
             // Recherche d'alternative
@@ -480,6 +485,12 @@ class tplEntryImages
                 $res               = $base . '.' . $info['extension'];
             } elseif (file_exists($f . '.gif')) {
                 $info['extension'] = 'gif';
+                $res               = $base . '.' . $info['extension'];
+            } elseif (file_exists($f . '.svg')) {
+                $info['extension'] = 'svg';
+                $res               = $base . '.' . $info['extension'];
+            } elseif (file_exists($f . '.webp')) {
+                $info['extension'] = 'webp';
                 $res               = $base . '.' . $info['extension'];
             }
             // Récupération des dimensions de l'image originale

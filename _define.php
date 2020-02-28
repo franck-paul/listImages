@@ -23,7 +23,7 @@ $this->registerModule(
         'requires'    => [['core', '2.16']], // Dependencies
         'permissions' => 'contentadmin',
         'type'        => 'plugin',
-        'support'     => 'http://forum.dotclear.org/viewforum.php?id=16',
-        'details'     => 'http://plugins.dotaddict.org/dc2/details/listImages'
+        'support'     => 'https://forum.dotclear.org/viewforum.php?id=16',
+        'details'     => 'https://plugins.dotaddict.org/dc2/details/listImages'
     ]
 );
