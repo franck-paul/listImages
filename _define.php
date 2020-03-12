@@ -17,7 +17,7 @@ $this->registerModule(
     "listImages",               // Name
     "List images from entries", // Description
     "Kozlika, Franck Paul",     // Author
-    '1.13',                     // Version
+    '1.12',                     // Version
                                 // Properties
     [
         'requires'    => [['core', '2.16']], // Dependencies
