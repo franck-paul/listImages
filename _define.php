@@ -27,6 +27,6 @@ $this->registerModule(
 
         'details'    => 'https://open-time.net/?q=listImages',       // Details URL
         'support'    => 'https://github.com/franck-paul/listImages', // Support URL
-        'repository' => 'https://raw.githubusercontent.com/franck-paul/listImages/main/dcstore.xml'
+        'repository' => 'https://raw.githubusercontent.com/franck-paul/listImages/master/dcstore.xml'
     ]
 );
