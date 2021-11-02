@@ -1,8 +1,8 @@
 <modules xmlns:da="http://dotaddict.org/da/">
   <module id="listImages">
-    <name>listImages</name>
+    <name>List images from entries</name>
     <version>1.12</version>
-    <author>Kozlika, Franck Paul</author>
+    <author>List images from entries</author>
     <desc>List images from entries</desc>
     <file>https://github.com/franck-paul/listImages/releases/download/1.12/plugin-listImages-1.12.zip</file>
     <da:dcmin>2.16</da:dcmin>
