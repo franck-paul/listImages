@@ -10,15 +10,14 @@
  * @copyright Kozlika, Franck Paul
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
-
-if (!defined('DC_RC_PATH')) {return;}
+if (!defined('DC_RC_PATH')) {
+    return;
+}
 
 /**
 Cette fonction permet d'extraire les images d'un billet
-
  */
-
-require dirname(__FILE__) . '/_widget.php';
+require __DIR__ . '/_widget.php';
 
 class widgetEntryImages
 {
@@ -27,16 +26,13 @@ class widgetEntryImages
 
     public static function EntryImages($w)
     {
-        global $core;
-
         // Si l'affichage du widget est désactivé, on ressort
         if ($w->offline) {
             return;
         }
 
         // Si l'affichage du widget est demandé sur la page d'accueil uniquement et qu'on y est pas, on ressort
-        if (($w->homeonly == 1 && !$core->url->isHome($core->url->type)) ||
-            ($w->homeonly == 2 && $core->url->isHome($core->url->type))) {
+        if (($w->homeonly == 1 && !dcCore::app()->url->isHome(dcCore::app()->url->type)) || ($w->homeonly == 2 && dcCore::app()->url->isHome(dcCore::app()->url->type))) {
             return;
         }
 
@@ -44,12 +40,12 @@ class widgetEntryImages
         $params['no_content'] = false;
 
         // Récupération de la limite du nb de billets dans lesquels rechercher des images
-        $params['limit'] = abs((integer) $w->limit);
+        $params['limit'] = abs((int) $w->limit);
 
         // Récupération de la ou des catégories spécifiées
         if ($w->category != '') {
             $category          = $w->category;
-            $params['cat_url'] = explode(",", $category);
+            $params['cat_url'] = explode(',', $category);
         }
 
         // Récupération de l'indicateur de billet sélectionné
@@ -58,7 +54,7 @@ class widgetEntryImages
         }
 
         // Recherche des billets correspondants
-        $rs = $core->blog->getPosts($params);
+        $rs = dcCore::app()->blog->getPosts($params);
 
         // Récupération des options d'affichage des images
         $size     = $w->size;
@@ -68,8 +64,8 @@ class widgetEntryImages
         $legend   = $w->legend;
         $bubble   = $w->bubble;
         $from     = $w->from;
-        $start    = abs((integer) $w->start);
-        $length   = abs((integer) $w->length);
+        $start    = abs((int) $w->start);
+        $length   = abs((int) $w->length);
         $class    = $w->class;
         $alt      = $w->alt;
         $img_dim  = $w->img_dim;
@@ -82,8 +78,21 @@ class widgetEntryImages
         // Appel de la fonction de traitement pour chacun des billets
         while ($rs->fetch()) {
             $ret .= tplEntryImages::EntryImagesHelper(
-                $size, $html_tag, $link, $exif, $legend, $bubble,
-                $from, $start, $length, $class, $alt, $img_dim, $def_size, $rs);
+                $size,
+                $html_tag,
+                $link,
+                $exif,
+                $legend,
+                $bubble,
+                $from,
+                $start,
+                $length,
+                $class,
+                $alt,
+                $img_dim,
+                $def_size,
+                $rs
+            );
         }
 
         // Fin d'affichage
@@ -93,7 +102,7 @@ class widgetEntryImages
     }
 }
 
-/**
+/*
 Balise : {{tpl:EntryImages}}
 
 Attributs (optionnels) :
@@ -115,7 +124,7 @@ exif : 0 (défaut), 1
  */
 
 // Déclaration de la balise {{tpl:EntryImages}}
-$core->tpl->addValue('EntryImages', ['tplEntryImages', 'EntryImages']);
+dcCore::app()->tpl->addValue('EntryImages', ['tplEntryImages', 'EntryImages']);
 
 class tplEntryImages
 {
@@ -143,47 +152,59 @@ class tplEntryImages
     public static function EntryImages($attr)
     {
         // Récupération des attributs
-        $size     = isset($attr['size']) ? trim($attr['size']) : '';
-        $html_tag = isset($attr['html_tag']) ? trim($attr['html_tag']) : '';
-        $link     = isset($attr['link']) ? trim($attr['link']) : '';
+        $size     = isset($attr['size']) ? trim((string) $attr['size']) : '';
+        $html_tag = isset($attr['html_tag']) ? trim((string) $attr['html_tag']) : '';
+        $link     = isset($attr['link']) ? trim((string) $attr['link']) : '';
         $exif     = isset($attr['exif']) ? 1 : 0;
-        $legend   = isset($attr['legend']) ? trim($attr['legend']) : '';
-        $bubble   = isset($attr['bubble']) ? trim($attr['bubble']) : '';
-        $from     = isset($attr['from']) ? trim($attr['from']) : '';
+        $legend   = isset($attr['legend']) ? trim((string) $attr['legend']) : '';
+        $bubble   = isset($attr['bubble']) ? trim((string) $attr['bubble']) : '';
+        $from     = isset($attr['from']) ? trim((string) $attr['from']) : '';
         $start    = isset($attr['start']) ? (int) $attr['start'] : 1;
         $length   = isset($attr['length']) ? (int) $attr['length'] : 0;
-        $class    = isset($attr['class']) ? trim($attr['class']) : '';
-        $alt      = isset($attr['alt']) ? trim($attr['alt']) : 'inherit';
-        $img_dim  = isset($attr['img_dim']) ? trim($attr['img_dim']) : 'none';
-        $def_size = isset($attr['def_size']) ? trim($attr['def_size']) : '';
+        $class    = isset($attr['class']) ? trim((string) $attr['class']) : '';
+        $alt      = isset($attr['alt']) ? trim((string) $attr['alt']) : 'inherit';
+        $img_dim  = isset($attr['img_dim']) ? trim((string) $attr['img_dim']) : 'none';
+        $def_size = isset($attr['def_size']) ? trim((string) $attr['def_size']) : '';
 
-        return "<?php echo tplEntryImages::EntryImagesHelper(" .
+        return '<?php echo tplEntryImages::EntryImagesHelper(' .
         "'" . addslashes($size) . "', " .
         "'" . addslashes($html_tag) . "', " .
         "'" . addslashes($link) . "', " .
-        $exif . ", " .
+        $exif . ', ' .
         "'" . addslashes($legend) . "', " .
         "'" . addslashes($bubble) . "', " .
         "'" . addslashes($from) . "', " .
-        $start . ", " .
-        $length . ", " .
+        $start . ', ' .
+        $length . ', ' .
         "'" . addslashes($class) . "', " .
         "'" . addslashes($alt) . "', " .
         "'" . addslashes($img_dim) . "', " .
         "'" . addslashes($def_size) . "'" .
-            "); ?>";
+            '); ?>';
     }
 
     // Code utilisé par la balise compilée
     // -----------------------------------
 
     // Fonction de génération de la liste des images ciblées par la balise template
-    public static function EntryImagesHelper($size, $html_tag, $link, $exif, $legend, $bubble, $from, $start, $length,
-        $class, $alt, $img_dim, $def_size, $rs = null) {
-        global $core, $_ctx;
-
+    public static function EntryImagesHelper(
+        $size,
+        $html_tag,
+        $link,
+        $exif,
+        $legend,
+        $bubble,
+        $from,
+        $start,
+        $length,
+        $class,
+        $alt,
+        $img_dim,
+        $def_size,
+        $rs = null
+    ) {
         // Contrôle des valeurs fournies et définition de la valeur par défaut pour les attributs
-        $media = new dcMedia($core);
+        $media = new dcMedia(dcCore::app());
         $sizes = implode('|', array_keys($media->thumb_sizes));
         if (!preg_match('/^' . $sizes . '|o' . '$/', $size)) {
             $size = 't';
@@ -210,23 +231,17 @@ class tplEntryImages
         if (!preg_match('/^sq|o|none$/', $def_size)) {
             $def_size = 'o';
         }
-        $start  = ((int) $start > 0 ? (int) $start - 1 : 0);
+        $start  = ((int) $start  > 0 ? (int) $start - 1 : 0);
         $length = ((int) $length > 0 ? (int) $length : 0);
 
         // Récupération de l'URL du dossier public
-        if (version_compare(DC_VERSION, '2.2-alpha1', '>=')) {
-            // New settings system
-            $p_url = $core->blog->settings->system->public_url;
-        } else {
-            // Old settings system
-            $p_url = $core->blog->settings->public_url;
-        }
+        $p_url = dcCore::app()->blog->settings->system->public_url;
         // Récupération du chemin du dossier public
-        $p_root = $core->blog->public_path;
+        $p_root = dcCore::app()->blog->public_path;
 
         // Contruction du pattern de recherche de la source des images dans les balises img
         // -> à noter que seules les images locales sont traitées
-        $p_site       = preg_replace('#^(.+?//.+?)/(.*)$#', '$1', $core->blog->url);
+        $p_site       = preg_replace('#^(.+?//.+?)/(.*)$#', '$1', dcCore::app()->blog->url);
         $pattern_path = '(?:' . preg_quote($p_site, '/') . ')?' . preg_quote($p_url, '/');
         $pattern_src  = sprintf('/src="%s(.*?\.(?:jpg|jpeg|gif|png|svg|webp|JPEG|JPG|GIF|PNG|SVG|WEBP))"/msu', $pattern_path);
 
@@ -235,7 +250,7 @@ class tplEntryImages
 
         // Si aucune liste de billet n'est fournie en paramètre, on utilise le contexte courant
         if (is_null($rs)) {
-            $rs = $_ctx->posts;
+            $rs = dcCore::app()->ctx->posts;
         }
         if (is_null($rs)) {
             exit;
@@ -275,8 +290,9 @@ class tplEntryImages
                                 $src_img = $p_url . (dirname($i) != '/' ? dirname($i) : '') . '/' . $src_img;
 
                                 // Recherche alt et title
-                                $img_alt   = (!preg_match('/alt="(.*?)"/msu', $m[1][$idx], $alt_value) ? '' : $alt_value[1]);
-                                $img_title = (!preg_match('/title="(.*?)"/msu', $m[1][$idx], $title_value) ? '' : $title_value[1]);
+                                $img_alt    = (!preg_match('/alt="(.*?)"/msu', $m[1][$idx], $alt_value) ? '' : $alt_value[1]);
+                                $img_title  = (!preg_match('/title="(.*?)"/msu', $m[1][$idx], $title_value) ? '' : $title_value[1]);
+                                $img_legend = '';
 
                                 if ($legend != 'none') {
                                     // Une légende est requise
@@ -326,15 +342,17 @@ class tplEntryImages
                                         // Si un lien est requis
                                         if ($link == 'image') {
                                             // Lien vers l'image originale
-                                            $href = self::ContentImageLookup($p_root, $i, "o", $sens, $dim, $sizes, 'o');
+                                            $href = self::ContentImageLookup($p_root, $i, 'o', $sens, $dim, $sizes, 'o');
                                             $href = $p_url . (dirname($i) != '/' ? dirname($i) : '') . '/' . $href;
                                             switch ($bubble) {
                                                 case 'entry':
                                                     $href_title = html::escapeHTML($rs->post_title);
+
                                                     break;
                                                 case 'image':
                                                 default:
                                                     $href_title = $img_alt;
+
                                                     break;
                                             }
                                         } else {
@@ -403,15 +421,12 @@ class tplEntryImages
                                 if ($length < $img_count) {
                                     $length++;
                                 }
-
                             }
-
                         } else {
                             // L'image ne comporte pas de source locale, on cherchera une image de plus pour tenter de satisfaire la demande
                             if ($length < $img_count) {
                                 $length++;
                             }
-
                         }
                     }
                 }
@@ -506,7 +521,7 @@ class tplEntryImages
             }
         }
         // Détermination de l'orientation de l'image
-        $sens = ($media_info[0] > $media_info[1] ? "landscape" : "portrait");
+        $sens = ($media_info[0] > $media_info[1] ? 'landscape' : 'portrait');
         if (!$dim) {
             $dim = $media_info;
         }
@@ -514,6 +529,7 @@ class tplEntryImages
         if ($res) {
             return $res;
         }
+
         return false;
     }
 }

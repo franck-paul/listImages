@@ -18,15 +18,14 @@ $this->registerModule(
     'listImages',               // Name
     'List images from entries', // Description
     'Kozlika, Franck Paul',     // Author
-    '1.12',                     // Version
-                                // Properties
+    '1.13',
     [
-        'requires'    => [['core', '2.16']], // Dependencies
+        'requires'    => [['core', '2.23']], // Dependencies
         'permissions' => 'contentadmin',
         'type'        => 'plugin',
 
         'details'    => 'https://open-time.net/?q=listImages',       // Details URL
         'support'    => 'https://github.com/franck-paul/listImages', // Support URL
-        'repository' => 'https://raw.githubusercontent.com/franck-paul/listImages/master/dcstore.xml'
+        'repository' => 'https://raw.githubusercontent.com/franck-paul/listImages/master/dcstore.xml',
     ]
 );
