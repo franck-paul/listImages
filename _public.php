@@ -204,7 +204,7 @@ class tplEntryImages
         $rs = null
     ) {
         // Contrôle des valeurs fournies et définition de la valeur par défaut pour les attributs
-        $media = new dcMedia(dcCore::app());
+        $media = new dcMedia();
         $sizes = implode('|', array_keys($media->thumb_sizes));
         if (!preg_match('/^' . $sizes . '|o' . '$/', $size)) {
             $size = 't';
@@ -298,7 +298,7 @@ class tplEntryImages
                                     // Une légende est requise
                                     if ($legend == 'image') {
                                         // On utilise les attributs de la balise image
-                                        if ($img_title != '' or $img_alt != '') {
+                                        if ($img_title != '' || $img_alt != '') {
                                             // On utilise l'attribut title s'il existe sinon l'attribut alt s'il existe
                                             $img_legend = ($img_title != '' ? $img_title : $img_alt);
                                         } else {
@@ -317,7 +317,6 @@ class tplEntryImages
                                     // Un titre d'image est requis
                                     if ($bubble == 'image') {
                                         // Le titre est déjà positionné
-                                        ;
                                     } else {
                                         // On utilise le titre du billet
                                         $img_title = html::escapeHTML($rs->post_title);

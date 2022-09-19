@@ -20,7 +20,7 @@ $this->registerModule(
     'Kozlika, Franck Paul',     // Author
     '1.13',
     [
-        'requires'    => [['core', '2.23']], // Dependencies
+        'requires'    => [['core', '2.24']], // Dependencies
         'permissions' => 'contentadmin',
         'type'        => 'plugin',
 
