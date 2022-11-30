@@ -14,8 +14,6 @@ if (!defined('DC_RC_PATH')) {
     return;
 }
 
-dcCore::app()->addBehavior('initWidgets', ['EntryImagesBehaviors', 'initWidgets']);
-
 class EntryImagesBehaviors
 {
     public static function initWidgets($w)
@@ -140,3 +138,5 @@ class EntryImagesBehaviors
             ->addOffline();
     }
 }
+
+dcCore::app()->addBehavior('initWidgets', [EntryImagesBehaviors::class, 'initWidgets']);

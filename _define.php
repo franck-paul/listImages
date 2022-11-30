@@ -15,17 +15,19 @@ if (!defined('DC_RC_PATH')) {
 }
 
 $this->registerModule(
-    'listImages',               // Name
-    'List images from entries', // Description
-    'Kozlika, Franck Paul',     // Author
-    '1.13',
+    'listImages',
+    'List images from entries',
+    'Kozlika, Franck Paul',
+    '2.0',
     [
-        'requires'    => [['core', '2.24']], // Dependencies
-        'permissions' => 'contentadmin',
-        'type'        => 'plugin',
+        'requires'    => [['core', '2.24']],
+        'permissions' => dcCore::app()->auth->makePermissions([
+            dcAuth::PERMISSION_CONTENT_ADMIN,
+        ]),
+        'type' => 'plugin',
 
-        'details'    => 'https://open-time.net/?q=listImages',       // Details URL
-        'support'    => 'https://github.com/franck-paul/listImages', // Support URL
+        'details'    => 'https://open-time.net/?q=listImages',
+        'support'    => 'https://github.com/franck-paul/listImages',
         'repository' => 'https://raw.githubusercontent.com/franck-paul/listImages/master/dcstore.xml',
     ]
 );

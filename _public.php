@@ -17,7 +17,7 @@ if (!defined('DC_RC_PATH')) {
 /**
 Cette fonction permet d'extraire les images d'un billet
  */
-require __DIR__ . '/_widget.php';
+require_once __DIR__ . '/_widget.php';
 
 class widgetEntryImages
 {
@@ -122,9 +122,6 @@ def_size : sq, o (défaut), none
 Non développés (pour l'instant, peut-être, chépô, etc) :
 exif : 0 (défaut), 1
  */
-
-// Déclaration de la balise {{tpl:EntryImages}}
-dcCore::app()->tpl->addValue('EntryImages', ['tplEntryImages', 'EntryImages']);
 
 class tplEntryImages
 {
@@ -231,7 +228,7 @@ class tplEntryImages
         if (!preg_match('/^sq|o|none$/', $def_size)) {
             $def_size = 'o';
         }
-        $start  = ((int) $start  > 0 ? (int) $start - 1 : 0);
+        $start  = ((int) $start > 0 ? (int) $start - 1 : 0);
         $length = ((int) $length > 0 ? (int) $length : 0);
 
         // Récupération de l'URL du dossier public
@@ -261,13 +258,11 @@ class tplEntryImages
             $subject = ($from != 'content' ? $rs->post_excerpt_xhtml : '') . ($from != 'excerpt' ? $rs->post_content_xhtml : '');
 
             if (preg_match_all('/<img(.*?)\/\>/msu', $subject, $m) > 0) {
-
                 // Récupération du nombre d'images trouvées
                 $img_count = count($m[0]);
 
                 // Contrôle des possibilités par rapport aux début demandé
                 if (($img_count - $start) > 0) {
-
                     // Au moins une image est disponible, calcul du nombre d'image à lister
                     if ($length == 0) {
                         $length = $img_count;
@@ -276,16 +271,13 @@ class tplEntryImages
                     $length = min($img_count, $start + $length);
 
                     for ($idx = $start; $idx < $length; $idx++) {
-
                         // Récupération de la source de l'image dans le contenu (attribut src de la balise img)
                         $i = (!preg_match($pattern_src, $m[1][$idx], $src) ? '' : $src[1]);
                         if ($i != '') {
-
                             // Recherche de l'image au format demandé
                             $sens = '';
                             $dim  = '';
                             if (($src_img = self::ContentImageLookup($p_root, $i, $size, $sens, $dim, $sizes, $def_size)) !== false) {
-
                                 // L'image existe, on construit son URL
                                 $src_img = $p_url . (dirname($i) != '/' ? dirname($i) : '') . '/' . $src_img;
 
@@ -474,7 +466,6 @@ class tplEntryImages
             //Récupération des dimensions de la miniature
             $media_info = getimagesize($root . $info['dirname'] . $res);
         } else {
-
             // Recherche d'alternative
             if ($def_size == 'none') {
                 // Pas d'alternative demandée
@@ -532,3 +523,6 @@ class tplEntryImages
         return false;
     }
 }
+
+// Déclaration de la balise {{tpl:EntryImages}}
+dcCore::app()->tpl->addValue('EntryImages', [tplEntryImages::class, 'EntryImages']);

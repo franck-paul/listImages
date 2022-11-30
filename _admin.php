@@ -17,4 +17,4 @@ if (!defined('DC_CONTEXT_ADMIN')) {
 // dead but useful code, in order to have translations
 __('listImages') . __('List images from entries');
 
-require __DIR__ . '/_widget.php';
+require_once __DIR__ . '/_widget.php';
