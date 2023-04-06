@@ -10,9 +10,9 @@
  * @copyright Kozlika, Franck Paul
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
-if (!defined('DC_RC_PATH')) {
-    return;
-}
+
+use Dotclear\Helper\File\Path;
+use Dotclear\Helper\Html\Html;
 
 /**
 Cette fonction permet d'extraire les images d'un billet
@@ -26,6 +26,7 @@ class widgetEntryImages
 
     public static function EntryImages($w)
     {
+        $params = [];
         // Si l'affichage du widget est désactivé, on ressort
         if ($w->offline) {
             return;
@@ -72,7 +73,7 @@ class widgetEntryImages
         $def_size = $w->def_size;
 
         // Début d'affichage
-        $ret = ($w->title ? $w->renderTitle(html::escapeHTML($w->title)) : '');
+        $ret = ($w->title ? $w->renderTitle(Html::escapeHTML($w->title)) : '');
         $ret .= '<' . ($html_tag == 'li' ? 'ul' : 'div') . ' class="listimages-wrapper">';
 
         // Appel de la fonction de traitement pour chacun des billets
@@ -259,7 +260,7 @@ class tplEntryImages
 
             if (preg_match_all('/<img(.*?)\/\>/msu', $subject, $m) > 0) {
                 // Récupération du nombre d'images trouvées
-                $img_count = count($m[0]);
+                $img_count = is_countable($m[0]) ? count($m[0]) : 0;
 
                 // Contrôle des possibilités par rapport aux début demandé
                 if (($img_count - $start) > 0) {
@@ -311,7 +312,7 @@ class tplEntryImages
                                         // Le titre est déjà positionné
                                     } else {
                                         // On utilise le titre du billet
-                                        $img_title = html::escapeHTML($rs->post_title);
+                                        $img_title = Html::escapeHTML($rs->post_title);
                                     }
                                 } else {
                                     // Pas de titre sur l'image
@@ -337,7 +338,7 @@ class tplEntryImages
                                             $href = $p_url . (dirname($i) != '/' ? dirname($i) : '') . '/' . $href;
                                             switch ($bubble) {
                                                 case 'entry':
-                                                    $href_title = html::escapeHTML($rs->post_title);
+                                                    $href_title = Html::escapeHTML($rs->post_title);
 
                                                     break;
                                                 case 'image':
@@ -349,7 +350,7 @@ class tplEntryImages
                                         } else {
                                             // Lien vers le billet d'origine
                                             $href       = $rs->getURL();
-                                            $href_title = html::escapeHTML($rs->post_title);
+                                            $href_title = Html::escapeHTML($rs->post_title);
                                         }
                                         $res .= '<a class="link_' . $link . '" href="' . $href . '" title="' . $href_title . '">';
                                     }
@@ -365,7 +366,7 @@ class tplEntryImages
 
                                 // Rajout de la classe si indiquée
                                 if ($class != '') {
-                                    $res .= 'class="' . html::escapeHTML($class) . '" ';
+                                    $res .= 'class="' . Html::escapeHTML($class) . '" ';
                                 }
                                 // Mise en place des dimensions de l'image si pas explicitement exclu
                                 if ($img_dim != 'none') {
@@ -433,7 +434,7 @@ class tplEntryImages
     private static function ContentImageLookup($root, $img, $size, &$sens, &$dim, $sizes, $def_size = 'o')
     {
         // Récupération du nom et de l'extension de l'image source
-        $info = path::info($img);
+        $info = Path::info($img);
         $base = $info['base'];
 
         if (substr($info['dirname'], -1) != '/') {
