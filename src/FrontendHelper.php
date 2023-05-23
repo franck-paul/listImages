@@ -5,187 +5,27 @@
  * @package Dotclear
  * @subpackage Plugins
  *
- * @author Kozlika, Franck Paul and contributors
+ * @author Franck Paul and contributors
  *
- * @copyright Kozlika, Franck Paul
+ * @copyright Franck Paul carnet.franck.paul@gmail.com
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
+declare(strict_types=1);
 
+namespace Dotclear\Plugin\listImages;
+
+use dcCore;
+use dcMedia;
 use Dotclear\Helper\File\Path;
 use Dotclear\Helper\Html\Html;
 
-/**
-Cette fonction permet d'extraire les images d'un billet
- */
-require_once __DIR__ . '/_widget.php';
-
-class widgetEntryImages
+class FrontendHelper
 {
-    // Code de traitement du widget
-    // ----------------------------
-
-    public static function EntryImages($w)
-    {
-        $params = [];
-        // Si l'affichage du widget est désactivé, on ressort
-        if ($w->offline) {
-            return;
-        }
-
-        // Si l'affichage du widget est demandé sur la page d'accueil uniquement et qu'on y est pas, on ressort
-        if (($w->homeonly == 1 && !dcCore::app()->url->isHome(dcCore::app()->url->type)) || ($w->homeonly == 2 && dcCore::app()->url->isHome(dcCore::app()->url->type))) {
-            return;
-        }
-
-        // Mise en place des paramètres de recherche par défaut
-        $params['no_content'] = false;
-
-        // Récupération de la limite du nb de billets dans lesquels rechercher des images
-        $params['limit'] = abs((int) $w->limit);
-
-        // Récupération de la ou des catégories spécifiées
-        if ($w->category != '') {
-            $category          = $w->category;
-            $params['cat_url'] = explode(',', $category);
-        }
-
-        // Récupération de l'indicateur de billet sélectionné
-        if ($w->selected == '1') {
-            $params['post_selected'] = '1';
-        }
-
-        // Recherche des billets correspondants
-        $rs = dcCore::app()->blog->getPosts($params);
-
-        // Récupération des options d'affichage des images
-        $size     = $w->size;
-        $html_tag = $w->html_tag;
-        $link     = $w->link;
-        $exif     = 0;
-        $legend   = $w->legend;
-        $bubble   = $w->bubble;
-        $from     = $w->from;
-        $start    = abs((int) $w->start);
-        $length   = abs((int) $w->length);
-        $class    = $w->class;
-        $alt      = $w->alt;
-        $img_dim  = $w->img_dim;
-        $def_size = $w->def_size;
-
-        // Début d'affichage
-        $ret = ($w->title ? $w->renderTitle(Html::escapeHTML($w->title)) : '');
-        $ret .= '<' . ($html_tag == 'li' ? 'ul' : 'div') . ' class="listimages-wrapper">';
-
-        // Appel de la fonction de traitement pour chacun des billets
-        while ($rs->fetch()) {
-            $ret .= tplEntryImages::EntryImagesHelper(
-                $size,
-                $html_tag,
-                $link,
-                $exif,
-                $legend,
-                $bubble,
-                $from,
-                $start,
-                $length,
-                $class,
-                $alt,
-                $img_dim,
-                $def_size,
-                $rs
-            );
-        }
-
-        // Fin d'affichage
-        $ret .= '</' . ($html_tag == 'li' ? 'ul' : 'div') . '>' . "\n";
-
-        return $w->renderDiv($w->content_only, 'listimages-widget ' . $w->class, '', $ret);
-    }
-}
-
-/*
-Balise : {{tpl:EntryImages}}
-
-Attributs (optionnels) :
-size :    sq, t (défaut), s, m, o (voir tailles de miniature du gestionnaire de médias)
-html_tag : span (défaut), li, div, none
-link : entry, image (défaut), none
-from : excerpt, content, full (défaut)
-legend : none (défaut), image, entry
-bubble : none, image (défaut), entry
-start : 1 (défaut) à n
-length : 0 (défaut) à n, 0 = toutes
-class : ajoutée à la balise <img />
-alt : none, inherit
-img_dim : ajoute les dimensions de l'image
-def_size : sq, o (défaut), none
-
-Non développés (pour l'instant, peut-être, chépô, etc) :
-exif : 0 (défaut), 1
- */
-
-class tplEntryImages
-{
-    // Code de traitement de la balise
-    // -------------------------------
-
-    /*
-    Balise d'extraction des images des billets sélectionnés par la balise <tpl:Entries> dans laquelle elle est placée
-    Exemple :
-    {{tpl:EntryImages}} -> extraira toutes les images du billet courant et les retourne sous la forme d'une série de span contenant l'image au format thumbnail liée vers l'image au format original
-    Attributs (optionnels) :
-    size :    sq, t (défaut), s, m, o (voir tailles de miniature du gestionnaire de médias)
-    html_tag : span (défaut), li, div, none
-    link : entry, image (défaut), none
-    from : excerpt, content, full (défaut)
-    legend : none (défaut), image, entry
-    bubble : none, image (défaut), entry
-    start : 1 (défaut) à n
-    length : 0 (défaut) à n, 0 = toutes
-    class : ajoutée à la balise <img />
-    alt : none, inherit (defaut)
-    img_dim : ajoute les dimensions de l'image
-    def_size : taille d'image à retourner par défaut -> sq, o (défaut), none
-     */
-    public static function EntryImages($attr)
-    {
-        // Récupération des attributs
-        $size     = isset($attr['size']) ? trim((string) $attr['size']) : '';
-        $html_tag = isset($attr['html_tag']) ? trim((string) $attr['html_tag']) : '';
-        $link     = isset($attr['link']) ? trim((string) $attr['link']) : '';
-        $exif     = isset($attr['exif']) ? 1 : 0;
-        $legend   = isset($attr['legend']) ? trim((string) $attr['legend']) : '';
-        $bubble   = isset($attr['bubble']) ? trim((string) $attr['bubble']) : '';
-        $from     = isset($attr['from']) ? trim((string) $attr['from']) : '';
-        $start    = isset($attr['start']) ? (int) $attr['start'] : 1;
-        $length   = isset($attr['length']) ? (int) $attr['length'] : 0;
-        $class    = isset($attr['class']) ? trim((string) $attr['class']) : '';
-        $alt      = isset($attr['alt']) ? trim((string) $attr['alt']) : 'inherit';
-        $img_dim  = isset($attr['img_dim']) ? trim((string) $attr['img_dim']) : 'none';
-        $def_size = isset($attr['def_size']) ? trim((string) $attr['def_size']) : '';
-
-        return '<?php echo tplEntryImages::EntryImagesHelper(' .
-        "'" . addslashes($size) . "', " .
-        "'" . addslashes($html_tag) . "', " .
-        "'" . addslashes($link) . "', " .
-        $exif . ', ' .
-        "'" . addslashes($legend) . "', " .
-        "'" . addslashes($bubble) . "', " .
-        "'" . addslashes($from) . "', " .
-        $start . ', ' .
-        $length . ', ' .
-        "'" . addslashes($class) . "', " .
-        "'" . addslashes($alt) . "', " .
-        "'" . addslashes($img_dim) . "', " .
-        "'" . addslashes($def_size) . "'" .
-            '); ?>';
-    }
-
     // Code utilisé par la balise compilée
     // -----------------------------------
 
     // Fonction de génération de la liste des images ciblées par la balise template
-    public static function EntryImagesHelper(
+    public static function EntryImages(
         $size,
         $html_tag,
         $link,
@@ -260,7 +100,7 @@ class tplEntryImages
 
             if (preg_match_all('/<img(.*?)\/\>/msu', $subject, $m) > 0) {
                 // Récupération du nombre d'images trouvées
-                $img_count = is_countable($m[0]) ? count($m[0]) : 0;
+                $img_count = count($m[0]);
 
                 // Contrôle des possibilités par rapport aux début demandé
                 if (($img_count - $start) > 0) {
@@ -524,6 +364,3 @@ class tplEntryImages
         return false;
     }
 }
-
-// Déclaration de la balise {{tpl:EntryImages}}
-dcCore::app()->tpl->addValue('EntryImages', [tplEntryImages::class, 'EntryImages']);

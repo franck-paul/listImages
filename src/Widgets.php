@@ -5,20 +5,26 @@
  * @package Dotclear
  * @subpackage Plugins
  *
- * @author Kozlika, Franck Paul and contributors
+ * @author Franck Paul and contributors
  *
- * @copyright Kozlika, Franck Paul
+ * @copyright Franck Paul carnet.franck.paul@gmail.com
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
-class EntryImagesBehaviors
+declare(strict_types=1);
+
+namespace Dotclear\Plugin\listImages;
+
+use Dotclear\Plugin\widgets\WidgetsStack;
+
+class Widgets
 {
-    public static function initWidgets($w)
+    public static function initWidgets(WidgetsStack $w)
     {
         $w
             ->create(
                 'EntryImages',
                 __('List entry images'),
-                ['widgetEntryImages', 'EntryImages'],
+                [FrontendWidgets::class, 'renderWidget'],
                 null,
                 __('List entry images by listImages plugin')
             )
@@ -134,5 +140,3 @@ class EntryImagesBehaviors
             ->addOffline();
     }
 }
-
-dcCore::app()->addBehavior('initWidgets', [EntryImagesBehaviors::class, 'initWidgets']);

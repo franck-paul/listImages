@@ -13,94 +13,72 @@ msgstr ""
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../git-plugins/listImages/src/Backend.php:27
 msgid "List images from entries"
 msgstr ""
 
-#: ../git-plugins/listImages/src/Backend.php:27
 msgid "listImages"
 msgstr ""
 
-#: ../git-plugins/listImages/src/FrontendHelper.php:145
 #, php-format
 msgid "Go to entry %s"
 msgstr ""
 
-#: ../git-plugins/listImages/src/Widgets.php:26
 msgid "List entry images"
 msgstr ""
 
-#: ../git-plugins/listImages/src/Widgets.php:29
 msgid "List entry images by listImages plugin"
 msgstr ""
 
-#: ../git-plugins/listImages/src/Widgets.php:33
 msgid "Last images"
 msgstr ""
 
-#: ../git-plugins/listImages/src/Widgets.php:37
 msgid "Category list:"
 msgstr ""
 
-#: ../git-plugins/listImages/src/Widgets.php:38
 msgid "Selected posts"
 msgstr ""
 
-#: ../git-plugins/listImages/src/Widgets.php:43
 msgid "Image size"
 msgstr ""
 
-#: ../git-plugins/listImages/src/Widgets.php:56
 msgid "Default image size"
 msgstr ""
 
-#: ../git-plugins/listImages/src/Widgets.php:67
 msgid "HTML tag"
 msgstr ""
 
-#: ../git-plugins/listImages/src/Widgets.php:79
 msgid "Image link"
 msgstr ""
 
-#: ../git-plugins/listImages/src/Widgets.php:90
 msgid "Search image in"
 msgstr ""
 
-#: ../git-plugins/listImages/src/Widgets.php:94
 msgid "content and excerpt"
 msgstr ""
 
-#: ../git-plugins/listImages/src/Widgets.php:95
 msgid "excerpt only"
 msgstr ""
 
-#: ../git-plugins/listImages/src/Widgets.php:96
 msgid "content only"
 msgstr ""
 
-#: ../git-plugins/listImages/src/Widgets.php:101
 msgid "Legend"
 msgstr ""
 
-#: ../git-plugins/listImages/src/Widgets.php:112
 msgid "Image title"
 msgstr ""
 
-#: ../git-plugins/listImages/src/Widgets.php:124
 msgid "Alt attribute"
 msgstr ""
 
-#: ../git-plugins/listImages/src/Widgets.php:132
 msgid "Includes width and height of image"
 msgstr ""
 
-#: ../git-plugins/listImages/src/Widgets.php:134
 msgid "Start from"
 msgstr ""
 
-#: ../git-plugins/listImages/src/Widgets.php:135
 msgid "Number (empty or 0 = all)"
 msgstr ""
