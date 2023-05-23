@@ -14,7 +14,7 @@ $this->registerModule(
     'listImages',
     'List images from entries',
     'Kozlika, Franck Paul',
-    '3.0',
+    '3.0.1',
     [
         'requires'    => [['core', '2.26']],
         'permissions' => dcCore::app()->auth->makePermissions([
