@@ -24,7 +24,7 @@ class Widgets
             ->create(
                 'EntryImages',
                 __('List entry images'),
-                [FrontendWidgets::class, 'renderWidget'],
+                FrontendWidgets::renderWidget(...),
                 null,
                 __('List entry images by listImages plugin')
             )

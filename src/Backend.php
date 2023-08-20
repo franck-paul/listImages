@@ -15,30 +15,27 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\listImages;
 
 use dcCore;
-use dcNsProcess;
+use Dotclear\Core\Process;
 
-class Backend extends dcNsProcess
+class Backend extends Process
 {
-    protected static $init = false; /** @deprecated since 2.27 */
     public static function init(): bool
     {
-        static::$init = My::checkContext(My::BACKEND);
-
         // dead but useful code, in order to have translations
         __('listImages') . __('List images from entries');
 
-        return static::$init;
+        return self::status(My::checkContext(My::BACKEND));
     }
 
     public static function process(): bool
     {
-        if (!static::$init) {
+        if (!self::status()) {
             return false;
         }
 
         if (My::checkContext(My::WIDGETS)) {
             dcCore::app()->addBehaviors([
-                'initWidgets' => [Widgets::class, 'initWidgets'],
+                'initWidgets' => Widgets::initWidgets(...),
             ]);
         }
 
