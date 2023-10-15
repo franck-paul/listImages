@@ -15,7 +15,7 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\listImages;
 
 use dcCore;
-use dcMedia;
+use Dotclear\Database\MetaRecord;
 use Dotclear\Helper\File\Path;
 use Dotclear\Helper\Html\Html;
 
@@ -24,26 +24,43 @@ class FrontendHelper
     // Code utilisé par la balise compilée
     // -----------------------------------
 
-    // Fonction de génération de la liste des images ciblées par la balise template
+    /**
+     * Fonction de génération de la liste des images ciblées par la balise template
+     *
+     * @param      string           $size      The thumb size
+     * @param      string           $html_tag  The html tag
+     * @param      string           $link      The link
+     * @param      int              $exif      The exif
+     * @param      string           $legend    The legend
+     * @param      string           $bubble    The bubble
+     * @param      string           $from      The from
+     * @param      int              $start     The start
+     * @param      int              $length    The length
+     * @param      string           $class     The class
+     * @param      string           $alt       The alternate
+     * @param      string           $img_dim   The image dim
+     * @param      string           $def_size  The definition size
+     * @param      null|MetaRecord  $rs        { parameter_description }
+     */
     public static function EntryImages(
-        $size,
-        $html_tag,
-        $link,
-        $exif,
-        $legend,
-        $bubble,
-        $from,
-        $start,
-        $length,
-        $class,
-        $alt,
-        $img_dim,
-        $def_size,
-        $rs = null
-    ) {
+        string $size,
+        string $html_tag,
+        string $link,
+        int $exif,
+        string $legend,
+        string $bubble,
+        string $from,
+        int $start,
+        int $length,
+        string $class,
+        string $alt,
+        string $img_dim,
+        string $def_size,
+        ?MetaRecord $rs = null
+    ): string {
         // Contrôle des valeurs fournies et définition de la valeur par défaut pour les attributs
-        $media = new dcMedia();
-        $sizes = implode('|', array_keys($media->thumb_sizes));
+        $media = dcCore::app()->media;
+        $sizes = implode('|', array_keys($media->getThumbSizes()));
         if (!preg_match('/^' . $sizes . '|o' . '$/', $size)) {
             $size = 't';
         }
@@ -69,8 +86,8 @@ class FrontendHelper
         if (!preg_match('/^sq|o|none$/', $def_size)) {
             $def_size = 'o';
         }
-        $start  = ((int) $start > 0 ? (int) $start - 1 : 0);
-        $length = ((int) $length > 0 ? (int) $length : 0);
+        $start  = ($start > 0 ? $start - 1 : 0);
+        $length = ($length > 0 ? $length : 0);
 
         // Récupération de l'URL du dossier public
         $p_url = dcCore::app()->blog->settings->system->public_url;
@@ -91,7 +108,7 @@ class FrontendHelper
             $rs = dcCore::app()->ctx->posts;
         }
         if (is_null($rs)) {
-            exit;
+            return '';
         }
 
         if (!$rs->isEmpty()) {
@@ -105,7 +122,7 @@ class FrontendHelper
                 // Contrôle des possibilités par rapport aux début demandé
                 if (($img_count - $start) > 0) {
                     // Au moins une image est disponible, calcul du nombre d'image à lister
-                    if ($length == 0) {
+                    if ($length === 0) {
                         $length = $img_count;
                     }
 
@@ -117,23 +134,23 @@ class FrontendHelper
                         if ($i != '') {
                             // Recherche de l'image au format demandé
                             $sens = '';
-                            $dim  = '';
+                            $dim  = [];
                             if (($src_img = self::ContentImageLookup($p_root, $i, $size, $sens, $dim, $sizes, $def_size)) !== false) {
                                 // L'image existe, on construit son URL
-                                $src_img = $p_url . (dirname($i) != '/' ? dirname($i) : '') . '/' . $src_img;
+                                $src_img = $p_url . (dirname($i) !== '/' ? dirname($i) : '') . '/' . $src_img;
 
                                 // Recherche alt et title
                                 $img_alt    = (!preg_match('/alt="(.*?)"/msu', $m[1][$idx], $alt_value) ? '' : $alt_value[1]);
                                 $img_title  = (!preg_match('/title="(.*?)"/msu', $m[1][$idx], $title_value) ? '' : $title_value[1]);
                                 $img_legend = '';
 
-                                if ($legend != 'none') {
+                                if ($legend !== 'none') {
                                     // Une légende est requise
-                                    if ($legend == 'image') {
+                                    if ($legend === 'image') {
                                         // On utilise les attributs de la balise image
-                                        if ($img_title != '' || $img_alt != '') {
+                                        if ($img_title !== '' || $img_alt !== '') {
                                             // On utilise l'attribut title s'il existe sinon l'attribut alt s'il existe
-                                            $img_legend = ($img_title != '' ? $img_title : $img_alt);
+                                            $img_legend = ($img_title !== '' ? $img_title : $img_alt);
                                         } else {
                                             // Aucune légende n'est possible pour l'image
                                             $img_legend = '';
@@ -146,9 +163,9 @@ class FrontendHelper
                                     }
                                 }
 
-                                if ($bubble != 'none') {
+                                if ($bubble !== 'none') {
                                     // Un titre d'image est requis
-                                    if ($bubble == 'image') {
+                                    if ($bubble === 'image') {
                                         // Le titre est déjà positionné
                                     } else {
                                         // On utilise le titre du billet
@@ -160,19 +177,19 @@ class FrontendHelper
                                 }
 
                                 // Ouverture div englobante si en div et légende requise (et existante)
-                                if ($legend != 'none' && $html_tag == 'div') {
+                                if ($legend !== 'none' && $html_tag === 'div') {
                                     $res .= '<div class="outer_' . $sens . '">';
                                     $res .= "\n";
                                 }
 
                                 // Ouverture balise
-                                if ($html_tag != 'none') {
+                                if ($html_tag !== 'none') {
                                     // Début de la balise englobante
                                     $res .= '<' . $html_tag . ' class="' . $sens . '">';
 
-                                    if ($link != 'none') {
+                                    if ($link !== 'none') {
                                         // Si un lien est requis
-                                        if ($link == 'image') {
+                                        if ($link === 'image') {
                                             // Lien vers l'image originale
                                             $href = self::ContentImageLookup($p_root, $i, 'o', $sens, $dim, $sizes, 'o');
                                             $href = $p_url . (dirname($i) != '/' ? dirname($i) : '') . '/' . $href;
@@ -197,7 +214,7 @@ class FrontendHelper
                                 }
 
                                 // Gestion option alt : inherit / none
-                                if ($alt == 'none') {
+                                if ($alt === 'none') {
                                     $img_alt = '';
                                 }
 
@@ -205,32 +222,32 @@ class FrontendHelper
                                 $res .= '<img src="' . $src_img . '" ';
 
                                 // Rajout de la classe si indiquée
-                                if ($class != '') {
+                                if ($class !== '') {
                                     $res .= 'class="' . Html::escapeHTML($class) . '" ';
                                 }
                                 // Mise en place des dimensions de l'image si pas explicitement exclu
-                                if ($img_dim != 'none') {
+                                if ($img_dim !== 'none') {
                                     $res .= 'width="' . $dim[0] . '" height="' . $dim[1] . '" ';
                                 }
                                 $res .= 'alt="' . $img_alt . '" ' . ($img_title == '' ? '' : 'title="' . $img_title . '" ') . '/>';
 
-                                if ($html_tag != 'none') {
+                                if ($html_tag !== 'none') {
                                     // Fin de la balise englobante
-                                    if ($link != 'none') {
+                                    if ($link !== 'none') {
                                         // Fermeture du lien requis
                                         $res .= '</a>';
                                     }
 
-                                    if ($legend != 'none' && $html_tag == 'div') {
+                                    if ($legend !== 'none' && $html_tag === 'div') {
                                         // Fermeture balise
                                         $res .= '</' . $html_tag . '>';
                                         $res .= "\n";
                                     }
 
-                                    if ($legend != 'none') {
+                                    if ($legend !== 'none') {
                                         // Une légende est requise
-                                        if ($img_legend != '') {
-                                            if ($html_tag == 'div') {
+                                        if ($img_legend !== '') {
+                                            if ($html_tag === 'div') {
                                                 $res .= '<p class="legend">' . $img_legend . '</p>';
                                             } else {
                                                 $res .= '<br /><span class="legend">' . $img_legend . '</span>';
@@ -239,7 +256,7 @@ class FrontendHelper
                                     }
 
                                     // Fermeture div englobante si en div et légende requise (et existante)
-                                    if ($legend != 'none' && $html_tag == 'div') {
+                                    if ($legend !== 'none' && $html_tag === 'div') {
                                         $res .= '</div>';
                                         $res .= "\n";
                                     } else {
@@ -268,10 +285,24 @@ class FrontendHelper
         if ($res) {
             return $res;
         }
+
+        return '';
     }
 
-    // Fonction utilitaire de recherche d'une image selon un format spécifié (indique aussi l'orientation)
-    private static function ContentImageLookup($root, $img, $size, &$sens, &$dim, $sizes, $def_size = 'o')
+    /**
+     * Fonction utilitaire de recherche d'une image selon un format spécifié (indique aussi l'orientation)
+     *
+     * @param      string                           $root      The root
+     * @param      string                           $img       The image
+     * @param      string                           $size      The size
+     * @param      string                           $sens      The sens
+     * @param      array<int|string, mixed>|null    $dim       The dim
+     * @param      string                           $sizes     The sizes
+     * @param      string                           $def_size  The default size
+     *
+     * @return     bool|string
+     */
+    private static function ContentImageLookup(string $root, string $img, string $size, string &$sens, ?array &$dim, string $sizes, string $def_size = 'o'): bool|string
     {
         // Récupération du nom et de l'extension de l'image source
         $info = Path::info($img);
@@ -291,27 +322,27 @@ class FrontendHelper
         }
 
         $res = false;
-        if ($size != 'o' && file_exists($root . $info['dirname'] . '.' . $base . '_' . $size . '.png')) {
+        if ($size !== 'o' && file_exists($root . $info['dirname'] . '.' . $base . '_' . $size . '.png')) {
             // Une miniature au format demandé a été trouvée
             $res = '.' . $base . '_' . $size . '.png';
             //Récupération des dimensions de la miniature
             $media_info = getimagesize($root . $info['dirname'] . $res);
-        } elseif ($size != 'o' && file_exists($root . $info['dirname'] . '.' . $base . '_' . $size . '.jpg')) {
+        } elseif ($size !== 'o' && file_exists($root . $info['dirname'] . '.' . $base . '_' . $size . '.jpg')) {
             // Une miniature au format demandé a été trouvée
             $res = '.' . $base . '_' . $size . '.jpg';
             //Récupération des dimensions de la miniature
             $media_info = getimagesize($root . $info['dirname'] . $res);
-        } elseif ($size != 'o' && file_exists($root . $info['dirname'] . '.' . $base . '_' . $size . '.webp')) {
+        } elseif ($size !== 'o' && file_exists($root . $info['dirname'] . '.' . $base . '_' . $size . '.webp')) {
             // Une miniature au format demandé a été trouvée
             $res = '.' . $base . '_' . $size . '.webp';
             //Récupération des dimensions de la miniature
             $media_info = getimagesize($root . $info['dirname'] . $res);
         } else {
             // Recherche d'alternative
-            if ($def_size == 'none') {
+            if ($def_size === 'none') {
                 // Pas d'alternative demandée
                 return false;
-            } elseif ($def_size == 'sq') {
+            } elseif ($def_size === 'sq') {
                 // Alternative square est demandée
                 return self::ContentImageLookup($root, $img, 'sq', $sens, $dim, $sizes, 'none');
             }
@@ -353,7 +384,7 @@ class FrontendHelper
         }
         // Détermination de l'orientation de l'image
         $sens = ($media_info[0] > $media_info[1] ? 'landscape' : 'portrait');
-        if (!$dim) {
+        if (!is_null($dim)) {
             $dim = $media_info;
         }
 

@@ -24,17 +24,17 @@ class FrontendWidgets
     // Code de traitement du widget
     // ----------------------------
 
-    public static function renderWidget(WidgetsElement $w)
+    public static function renderWidget(WidgetsElement $w): string
     {
         $params = [];
         // Si l'affichage du widget est désactivé, on ressort
         if ($w->offline) {
-            return;
+            return '';
         }
 
         // Si l'affichage du widget est demandé sur la page d'accueil uniquement et qu'on y est pas, on ressort
         if (($w->homeonly == 1 && !dcCore::app()->url->isHome(dcCore::app()->url->type)) || ($w->homeonly == 2 && dcCore::app()->url->isHome(dcCore::app()->url->type))) {
-            return;
+            return '';
         }
 
         // Mise en place des paramètres de recherche par défaut

@@ -14,6 +14,8 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\listImages;
 
+use ArrayObject;
+
 /*
 Balise : {{tpl:EntryImages}}
 
@@ -58,7 +60,13 @@ class FrontendTemplate
     img_dim : ajoute les dimensions de l'image
     def_size : taille d'image à retourner par défaut -> sq, o (défaut), none
      */
-    public static function EntryImages($attr)
+
+    /**
+     * @param      array<string, mixed>|\ArrayObject<string, mixed>  $attr      The attribute
+     *
+     * @return     string
+     */
+    public static function EntryImages(array|ArrayObject $attr): string
     {
         // Récupération des attributs
         $size     = isset($attr['size']) ? trim((string) $attr['size']) : '';
