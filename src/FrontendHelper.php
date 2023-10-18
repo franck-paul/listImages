@@ -382,14 +382,16 @@ class FrontendHelper
                 }
             }
         }
-        // Détermination de l'orientation de l'image
-        $sens = ($media_info[0] > $media_info[1] ? 'landscape' : 'portrait');
-        if (!is_null($dim)) {
-            $dim = $media_info;
-        }
+        if ($media_info !== false) {
+            // Détermination de l'orientation de l'image
+            $sens = ($media_info[0] > $media_info[1] ? 'landscape' : 'portrait');
+            if (!is_null($dim)) {
+                $dim = $media_info;
+            }
 
-        if ($res) {
-            return $res;
+            if ($res) {
+                return $res;
+            }
         }
 
         return false;
