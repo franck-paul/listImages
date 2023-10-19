@@ -15,7 +15,7 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\listImages;
 
 use dcCore;
-
+use Dotclear\App;
 use Dotclear\Helper\Html\Html;
 use Dotclear\Plugin\widgets\WidgetsElement;
 
@@ -55,7 +55,7 @@ class FrontendWidgets
         }
 
         // Recherche des billets correspondants
-        $rs = dcCore::app()->blog->getPosts($params);
+        $rs = App::blog()->getPosts($params);
 
         // Récupération des options d'affichage des images
         $size     = $w->size;

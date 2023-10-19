@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\listImages;
 
 use dcCore;
+use Dotclear\App;
 use Dotclear\Database\MetaRecord;
 use Dotclear\Helper\File\Path;
 use Dotclear\Helper\Html\Html;
@@ -90,13 +91,13 @@ class FrontendHelper
         $length = ($length > 0 ? $length : 0);
 
         // Récupération de l'URL du dossier public
-        $p_url = dcCore::app()->blog->settings->system->public_url;
+        $p_url = App::blog()->settings()->system->public_url;
         // Récupération du chemin du dossier public
-        $p_root = dcCore::app()->blog->public_path;
+        $p_root = App::blog()->publicPath();
 
         // Contruction du pattern de recherche de la source des images dans les balises img
         // -> à noter que seules les images locales sont traitées
-        $p_site       = preg_replace('#^(.+?//.+?)/(.*)$#', '$1', dcCore::app()->blog->url);
+        $p_site       = (string) preg_replace('#^(.+?//.+?)/(.*)$#', '$1', App::blog()->url());
         $pattern_path = '(?:' . preg_quote($p_site, '/') . ')?' . preg_quote($p_url, '/');
         $pattern_src  = sprintf('/src="%s(.*?\.(?:jpg|jpeg|gif|png|svg|webp|JPEG|JPG|GIF|PNG|SVG|WEBP))"/msu', $pattern_path);
 
