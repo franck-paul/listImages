@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\listImages;
 
-use dcCore;
+use Dotclear\App;
 use Dotclear\Core\Process;
 
 class Frontend extends Process
@@ -30,12 +30,12 @@ class Frontend extends Process
             return false;
         }
 
-        dcCore::app()->addBehaviors([
+        App::behavior()->addBehaviors([
             'initWidgets' => Widgets::initWidgets(...),
         ]);
 
         // Déclaration de la balise {{tpl:EntryImages}}
-        dcCore::app()->tpl->addValue('EntryImages', FrontendTemplate::EntryImages(...));
+        App::frontend()->template()->addValue('EntryImages', FrontendTemplate::EntryImages(...));
 
         return true;
     }

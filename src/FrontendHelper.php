@@ -14,7 +14,6 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\listImages;
 
-use dcCore;
 use Dotclear\App;
 use Dotclear\Database\MetaRecord;
 use Dotclear\Helper\File\Path;
@@ -60,7 +59,7 @@ class FrontendHelper
         ?MetaRecord $rs = null
     ): string {
         // Contrôle des valeurs fournies et définition de la valeur par défaut pour les attributs
-        $media = dcCore::app()->media;
+        $media = App::media();
         $sizes = implode('|', array_keys($media->getThumbSizes()));
         if (!preg_match('/^' . $sizes . '|o' . '$/', $size)) {
             $size = 't';
@@ -106,7 +105,7 @@ class FrontendHelper
 
         // Si aucune liste de billet n'est fournie en paramètre, on utilise le contexte courant
         if (is_null($rs)) {
-            $rs = dcCore::app()->ctx->posts;
+            $rs = App::frontend()->context()->posts;
         }
         if (is_null($rs)) {
             return '';
