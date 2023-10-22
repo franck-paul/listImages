@@ -98,7 +98,7 @@ class FrontendHelper
         // -> à noter que seules les images locales sont traitées
         $p_site       = (string) preg_replace('#^(.+?//.+?)/(.*)$#', '$1', App::blog()->url());
         $pattern_path = '(?:' . preg_quote($p_site, '/') . ')?' . preg_quote($p_url, '/');
-        $pattern_src  = sprintf('/src="%s(.*?\.(?:jpg|jpeg|gif|png|svg|webp|JPEG|JPG|GIF|PNG|SVG|WEBP))"/msu', $pattern_path);
+        $pattern_src  = sprintf('/src="%s(.*?\.(?:jpg|jpeg|gif|png|svg|webp|avif|JPEG|JPG|GIF|PNG|SVG|WEBP|AVIF))"/msu', $pattern_path);
 
         // Buffer de retour
         $res = '';
@@ -337,6 +337,11 @@ class FrontendHelper
             $res = '.' . $base . '_' . $size . '.webp';
             //Récupération des dimensions de la miniature
             $media_info = getimagesize($root . $info['dirname'] . $res);
+        } elseif ($size !== 'o' && file_exists($root . $info['dirname'] . '.' . $base . '_' . $size . '.avif')) {
+            // Une miniature au format demandé a été trouvée
+            $res = '.' . $base . '_' . $size . '.avif';
+            //Récupération des dimensions de la miniature
+            $media_info = getimagesize($root . $info['dirname'] . $res);
         } else {
             // Recherche d'alternative
             if ($def_size === 'none') {
@@ -368,6 +373,9 @@ class FrontendHelper
                 $res               = $base . '.' . $info['extension'];
             } elseif (file_exists($f . '.webp')) {
                 $info['extension'] = 'webp';
+                $res               = $base . '.' . $info['extension'];
+            } elseif (file_exists($f . '.avif')) {
+                $info['extension'] = 'avif';
                 $res               = $base . '.' . $info['extension'];
             }
             // Récupération des dimensions de l'image originale
