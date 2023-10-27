@@ -64,30 +64,38 @@ class FrontendHelper
         if (!preg_match('/^' . $sizes . '|o' . '$/', $size)) {
             $size = 't';
         }
+
         if (!preg_match('/^span|li|div|none$/', $html_tag)) {
             $html_tag = 'span';
         }
+
         if (!preg_match('/^entry|image|none$/', $link)) {
             $link = 'image';
         }
+
         $exif = (bool) $exif;
         if (!preg_match('/^entry|image|none$/', $legend)) {
             $legend = 'none';
         }
+
         if (!preg_match('/^entry|image|none$/', $bubble)) {
             $bubble = 'image';
         }
+
         if (!preg_match('/^excerpt|content|full$/', $from)) {
             $from = 'full';
         }
+
         if (!preg_match('/^none|inherit$/', $alt)) {
             $alt = 'inherit';
         }
+
         if (!preg_match('/^sq|o|none$/', $def_size)) {
             $def_size = 'o';
         }
+
         $start  = ($start > 0 ? $start - 1 : 0);
-        $length = ($length > 0 ? $length : 0);
+        $length = (max($length, 0));
 
         // Récupération de l'URL du dossier public
         $p_url = App::blog()->settings()->system->public_url;
@@ -107,6 +115,7 @@ class FrontendHelper
         if (is_null($rs)) {
             $rs = App::frontend()->context()->posts;
         }
+
         if (is_null($rs)) {
             return '';
         }
@@ -128,9 +137,9 @@ class FrontendHelper
 
                     $length = min($img_count, $start + $length);
 
-                    for ($idx = $start; $idx < $length; $idx++) {
+                    for ($idx = $start; $idx < $length; ++$idx) {
                         // Récupération de la source de l'image dans le contenu (attribut src de la balise img)
-                        $i = (!preg_match($pattern_src, $m[1][$idx], $src) ? '' : $src[1]);
+                        $i = (preg_match($pattern_src, $m[1][$idx], $src) ? $src[1] : '');
                         if ($i != '') {
                             // Recherche de l'image au format demandé
                             $sens = '';
@@ -138,12 +147,10 @@ class FrontendHelper
                             if (($src_img = self::ContentImageLookup($p_root, $i, $size, $sens, $dim, $sizes, $def_size)) !== false) {
                                 // L'image existe, on construit son URL
                                 $src_img = $p_url . (dirname($i) !== '/' ? dirname($i) : '') . '/' . $src_img;
-
                                 // Recherche alt et title
-                                $img_alt    = (!preg_match('/alt="(.*?)"/msu', $m[1][$idx], $alt_value) ? '' : $alt_value[1]);
-                                $img_title  = (!preg_match('/title="(.*?)"/msu', $m[1][$idx], $title_value) ? '' : $title_value[1]);
+                                $img_alt    = (preg_match('/alt="(.*?)"/msu', $m[1][$idx], $alt_value) ? $alt_value[1] : '');
+                                $img_title  = (preg_match('/title="(.*?)"/msu', $m[1][$idx], $title_value) ? $title_value[1] : '');
                                 $img_legend = '';
-
                                 if ($legend !== 'none') {
                                     // Une légende est requise
                                     if ($legend === 'image') {
@@ -209,6 +216,7 @@ class FrontendHelper
                                             $href       = $rs->getURL();
                                             $href_title = Html::escapeHTML($rs->post_title);
                                         }
+
                                         $res .= '<a class="link_' . $link . '" href="' . $href . '" title="' . $href_title . '">';
                                     }
                                 }
@@ -220,17 +228,17 @@ class FrontendHelper
 
                                 // Mise en place de l'image
                                 $res .= '<img src="' . $src_img . '" ';
-
                                 // Rajout de la classe si indiquée
                                 if ($class !== '') {
                                     $res .= 'class="' . Html::escapeHTML($class) . '" ';
                                 }
+
                                 // Mise en place des dimensions de l'image si pas explicitement exclu
                                 if ($img_dim !== 'none') {
                                     $res .= 'width="' . $dim[0] . '" height="' . $dim[1] . '" ';
                                 }
-                                $res .= 'alt="' . $img_alt . '" ' . ($img_title == '' ? '' : 'title="' . $img_title . '" ') . '/>';
 
+                                $res .= 'alt="' . $img_alt . '" ' . ($img_title == '' ? '' : 'title="' . $img_title . '" ') . '/>';
                                 if ($html_tag !== 'none') {
                                     // Fin de la balise englobante
                                     if ($link !== 'none') {
@@ -244,14 +252,12 @@ class FrontendHelper
                                         $res .= "\n";
                                     }
 
-                                    if ($legend !== 'none') {
-                                        // Une légende est requise
-                                        if ($img_legend !== '') {
-                                            if ($html_tag === 'div') {
-                                                $res .= '<p class="legend">' . $img_legend . '</p>';
-                                            } else {
-                                                $res .= '<br /><span class="legend">' . $img_legend . '</span>';
-                                            }
+                                    // Une légende est requise
+                                    if ($legend !== 'none' && $img_legend !== '') {
+                                        if ($html_tag === 'div') {
+                                            $res .= '<p class="legend">' . $img_legend . '</p>';
+                                        } else {
+                                            $res .= '<br /><span class="legend">' . $img_legend . '</span>';
                                         }
                                     }
 
@@ -265,24 +271,20 @@ class FrontendHelper
                                         $res .= "\n";
                                     }
                                 }
-                            } else {
+                            } elseif ($length < $img_count) {
                                 // L'image au format demandé n'a pas été trouvée, on cherchera une image de plus pour tenter de satisfaire la demande
-                                if ($length < $img_count) {
-                                    $length++;
-                                }
+                                ++$length;
                             }
-                        } else {
+                        } elseif ($length < $img_count) {
                             // L'image ne comporte pas de source locale, on cherchera une image de plus pour tenter de satisfaire la demande
-                            if ($length < $img_count) {
-                                $length++;
-                            }
+                            ++$length;
                         }
                     }
                 }
             }
         }
 
-        if ($res) {
+        if ($res !== '' && $res !== '0') {
             return $res;
         }
 
@@ -308,11 +310,11 @@ class FrontendHelper
         $info = Path::info($img);
         $base = $info['base'];
 
-        if (substr($info['dirname'], -1) != '/') {
+        if (!str_ends_with($info['dirname'], '/')) {
             $info['dirname'] .= '/';
         }
 
-        if (substr($root, -1) != '/') {
+        if (!str_ends_with($root, '/')) {
             $root .= '/';
         }
 
@@ -378,18 +380,18 @@ class FrontendHelper
                 $info['extension'] = 'avif';
                 $res               = $base . '.' . $info['extension'];
             }
+
             // Récupération des dimensions de l'image originale
             if (file_exists($root . $info['dirname'] . $base . '.' . strtoupper($info['extension']))) {
                 $media_info = getimagesize($root . $info['dirname'] . $base . '.' . strtoupper($info['extension']));
+            } elseif (file_exists($root . $info['dirname'] . $base . '.' . $info['extension'])) {
+                $media_info = getimagesize($root . $info['dirname'] . $base . '.' . $info['extension']);
             } else {
-                if (file_exists($root . $info['dirname'] . $base . '.' . $info['extension'])) {
-                    $media_info = getimagesize($root . $info['dirname'] . $base . '.' . $info['extension']);
-                } else {
-                    // L'image originale n'est plus présente ou accessible
-                    return false;
-                }
+                // L'image originale n'est plus présente ou accessible
+                return false;
             }
         }
+
         if ($media_info !== false) {
             // Détermination de l'orientation de l'image
             $sens = ($media_info[0] > $media_info[1] ? 'landscape' : 'portrait');
