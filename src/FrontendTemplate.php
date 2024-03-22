@@ -28,7 +28,7 @@ legend : none (défaut), image, entry
 bubble : none, image (défaut), entry
 start : 1 (défaut) à n
 length : 0 (défaut) à n, 0 = toutes
-class : ajoutée à la balise <img />
+class : ajoutée à la balise <img>
 alt : none, inherit
 img_dim : ajoute les dimensions de l'image
 def_size : sq, o (défaut), none
@@ -55,7 +55,7 @@ class FrontendTemplate
     bubble : none, image (défaut), entry
     start : 1 (défaut) à n
     length : 0 (défaut) à n, 0 = toutes
-    class : ajoutée à la balise <img />
+    class : ajoutée à la balise <img>
     alt : none, inherit (defaut)
     img_dim : ajoute les dimensions de l'image
     def_size : taille d'image à retourner par défaut -> sq, o (défaut), none

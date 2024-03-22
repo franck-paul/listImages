@@ -234,11 +234,11 @@ class FrontendHelper
                                 }
 
                                 // Mise en place des dimensions de l'image si pas explicitement exclu
-                                if ($img_dim !== 'none') {
+                                if ($img_dim !== 'none' && is_array($dim) && count($dim) >= 1) {
                                     $res .= 'width="' . $dim[0] . '" height="' . $dim[1] . '" ';
                                 }
 
-                                $res .= 'alt="' . $img_alt . '" ' . ($img_title == '' ? '' : 'title="' . $img_title . '" ') . '/>';
+                                $res .= 'alt="' . $img_alt . '" ' . ($img_title == '' ? '' : 'title="' . $img_title . '" ') . '>';
                                 if ($html_tag !== 'none') {
                                     // Fin de la balise englobante
                                     if ($link !== 'none') {
@@ -257,7 +257,7 @@ class FrontendHelper
                                         if ($html_tag === 'div') {
                                             $res .= '<p class="legend">' . $img_legend . '</p>';
                                         } else {
-                                            $res .= '<br /><span class="legend">' . $img_legend . '</span>';
+                                            $res .= '<br><span class="legend">' . $img_legend . '</span>';
                                         }
                                     }
 
