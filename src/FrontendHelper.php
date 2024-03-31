@@ -25,6 +25,15 @@ class FrontendHelper
     // -----------------------------------
 
     /**
+     * List of searchable extensions
+     *
+     * @var        array<int, string>
+     */
+    private static array $extensions = [
+        'jpg', 'jpeg', 'gif','png','svg','webp','avif',
+    ];
+
+    /**
      * Fonction de génération de la liste des images ciblées par la balise template
      *
      * @param      string           $size      The thumb size
@@ -106,7 +115,7 @@ class FrontendHelper
         // -> à noter que seules les images locales sont traitées
         $p_site       = (string) preg_replace('#^(.+?//.+?)/(.*)$#', '$1', App::blog()->url());
         $pattern_path = '(?:' . preg_quote($p_site, '/') . ')?' . preg_quote($p_url, '/');
-        $pattern_src  = sprintf('/src="%s(.*?\.(?:jpg|jpeg|gif|png|svg|webp|avif|JPEG|JPG|GIF|PNG|SVG|WEBP|AVIF))"/msu', $pattern_path);
+        $pattern_src  = sprintf('/src="%s(.*?\.(?:' . implode('|', self::$extensions) . '))"/msui', $pattern_path);
 
         // Buffer de retour
         $res = '';
@@ -142,9 +151,9 @@ class FrontendHelper
                         $i = (preg_match($pattern_src, $m[1][$idx], $src) ? $src[1] : '');
                         if ($i != '') {
                             // Recherche de l'image au format demandé
-                            $sens = '';
-                            $dim  = [];
-                            if (($src_img = self::ContentImageLookup($p_root, $i, $size, $sens, $dim, $sizes, $def_size)) !== false) {
+                            $orientation = '';
+                            $dim         = [];
+                            if (($src_img = self::ContentImageLookup($p_root, $i, $size, $orientation, $dim, $sizes, $def_size)) !== false) {
                                 // L'image existe, on construit son URL
                                 $src_img = $p_url . (dirname($i) !== '/' ? dirname($i) : '') . '/' . $src_img;
                                 // Recherche alt et title
@@ -185,20 +194,20 @@ class FrontendHelper
 
                                 // Ouverture div englobante si en div et légende requise (et existante)
                                 if ($legend !== 'none' && $html_tag === 'div') {
-                                    $res .= '<div class="outer_' . $sens . '">';
+                                    $res .= '<div class="outer_' . $orientation . '">';
                                     $res .= "\n";
                                 }
 
                                 // Ouverture balise
                                 if ($html_tag !== 'none') {
                                     // Début de la balise englobante
-                                    $res .= '<' . $html_tag . ' class="' . $sens . '">';
+                                    $res .= '<' . $html_tag . ' class="' . $orientation . '">';
 
                                     if ($link !== 'none') {
                                         // Si un lien est requis
                                         if ($link === 'image') {
                                             // Lien vers l'image originale
-                                            $href = self::ContentImageLookup($p_root, $i, 'o', $sens, $dim, $sizes, 'o');
+                                            $href = self::ContentImageLookup($p_root, $i, 'o', $orientation, $dim, $sizes, 'o');
                                             $href = $p_url . (dirname($i) != '/' ? dirname($i) : '') . '/' . $href;
                                             switch ($bubble) {
                                                 case 'entry':
@@ -296,16 +305,27 @@ class FrontendHelper
      *
      * @param      string                           $root      The root
      * @param      string                           $img       The image
-     * @param      string                           $size      The size
-     * @param      string                           $sens      The sens
-     * @param      array<int|string, mixed>|null    $dim       The dim
-     * @param      string                           $sizes     The sizes
-     * @param      string                           $def_size  The default size
+     * @param      string                           $size      The requested size
+     * @param      string                           $orientation      The image orientation
+     * @param      array<int|string, mixed>|null    $dim       The image dimension if found
+     * @param      string                           $sizes     The possible image sizes (pattern)
+     * @param      string                           $def_size  The default size to provided if requested not found
      *
      * @return     bool|string
      */
-    private static function ContentImageLookup(string $root, string $img, string $size, string &$sens, ?array &$dim, string $sizes, string $def_size = 'o'): bool|string
-    {
+    private static function ContentImageLookup(
+        string $root,
+        string $img,
+        string $size,
+        string &$orientation,
+        ?array &$dim,
+        string $sizes,
+        string $def_size = 'o'
+    ): bool|string {
+        // Init
+        $media_info = false;
+        $res        = false;
+
         // Récupération du nom et de l'extension de l'image source
         $info = Path::info($img);
         $base = $info['base'];
@@ -319,31 +339,42 @@ class FrontendHelper
         }
 
         // Suppression du suffixe rajouté pour la création des miniatures s'il existe dans le nom de l'image
-        if (preg_match('/^\.(.+)_(' . $sizes . ')$/', $base, $m)) {
+        $thumb_prefix = App::media()->getThumbnailPrefix();
+        if ($thumb_prefix !== '.') {
+            // Exclude . (hidden files) and prefixed thumbnails
+            $pattern_prefix = sprintf('(\.|%s)', preg_quote($thumb_prefix));
+        } else {
+            // Exclude . (hidden files)
+            $pattern_prefix = '\.';
+        }
+        if (preg_match('/^' . $pattern_prefix . '(.+)_(' . $sizes . ')$/', $base, $m)) {
             $base = $m[1];
         }
 
-        $res = false;
-        if ($size !== 'o' && file_exists($root . $info['dirname'] . '.' . $base . '_' . $size . '.png')) {
-            // Une miniature au format demandé a été trouvée
-            $res = '.' . $base . '_' . $size . '.png';
-            //Récupération des dimensions de la miniature
-            $media_info = getimagesize($root . $info['dirname'] . $res);
-        } elseif ($size !== 'o' && file_exists($root . $info['dirname'] . '.' . $base . '_' . $size . '.jpg')) {
-            // Une miniature au format demandé a été trouvée
-            $res = '.' . $base . '_' . $size . '.jpg';
-            //Récupération des dimensions de la miniature
-            $media_info = getimagesize($root . $info['dirname'] . $res);
-        } elseif ($size !== 'o' && file_exists($root . $info['dirname'] . '.' . $base . '_' . $size . '.webp')) {
-            // Une miniature au format demandé a été trouvée
-            $res = '.' . $base . '_' . $size . '.webp';
-            //Récupération des dimensions de la miniature
-            $media_info = getimagesize($root . $info['dirname'] . $res);
-        } elseif ($size !== 'o' && file_exists($root . $info['dirname'] . '.' . $base . '_' . $size . '.avif')) {
-            // Une miniature au format demandé a été trouvée
-            $res = '.' . $base . '_' . $size . '.avif';
-            //Récupération des dimensions de la miniature
-            $media_info = getimagesize($root . $info['dirname'] . $res);
+        if ($size !== 'o') {
+            foreach (self::$extensions as $extension) {
+                if (file_exists($root . $info['dirname'] . $thumb_prefix . $base . '_' . $size . '.' . $extension)) {
+                    // Une miniature au format demandé a été trouvée
+                    $res = $thumb_prefix . $base . '_' . $size . '.' . $extension;
+                    //Récupération des dimensions de la miniature
+                    $media_info = getimagesize($root . $info['dirname'] . $res);
+
+                    break;
+                }
+            }
+            if ($res === false && $thumb_prefix !== '.') {
+                // Recherche avec . comme préfixe de miniature
+                foreach (self::$extensions as $extension) {
+                    if (file_exists($root . $info['dirname'] . '.' . $base . '_' . $size . '.' . $extension)) {
+                        // Une miniature au format demandé a été trouvée
+                        $res = '.' . $base . '_' . $size . '.' . $extension;
+                        //Récupération des dimensions de la miniature
+                        $media_info = getimagesize($root . $info['dirname'] . $res);
+
+                        break;
+                    }
+                }
+            }
         } else {
             // Recherche d'alternative
             if ($def_size === 'none') {
@@ -351,50 +382,38 @@ class FrontendHelper
                 return false;
             } elseif ($def_size === 'sq') {
                 // Alternative square est demandée
-                return self::ContentImageLookup($root, $img, 'sq', $sens, $dim, $sizes, 'none');
+                return self::ContentImageLookup($root, $img, 'sq', $orientation, $dim, $sizes, 'none');
             }
 
             // Recherche l'image originale
             $f = $root . $info['dirname'] . $base;
             if (file_exists($f . '.' . $info['extension'])) {
                 $res = $base . '.' . $info['extension'];
-            } elseif (file_exists($f . '.jpg')) {
-                $info['extension'] = 'jpg';
-                $res               = $base . '.' . $info['extension'];
-            } elseif (file_exists($f . '.jpeg')) {
-                $info['extension'] = 'jpeg';
-                $res               = $base . '.' . $info['extension'];
-            } elseif (file_exists($f . '.png')) {
-                $info['extension'] = 'png';
-                $res               = $base . '.' . $info['extension'];
-            } elseif (file_exists($f . '.gif')) {
-                $info['extension'] = 'gif';
-                $res               = $base . '.' . $info['extension'];
-            } elseif (file_exists($f . '.svg')) {
-                $info['extension'] = 'svg';
-                $res               = $base . '.' . $info['extension'];
-            } elseif (file_exists($f . '.webp')) {
-                $info['extension'] = 'webp';
-                $res               = $base . '.' . $info['extension'];
-            } elseif (file_exists($f . '.avif')) {
-                $info['extension'] = 'avif';
-                $res               = $base . '.' . $info['extension'];
+            } else {
+                foreach (self::$extensions as $extension) {
+                    if (file_exists($f . '.' . $extension)) {
+                        $info['extension'] = $extension;
+                        $res               = $base . '.' . $extension;
+
+                        break;
+                    }
+                }
             }
 
             // Récupération des dimensions de l'image originale
-            if (file_exists($root . $info['dirname'] . $base . '.' . strtoupper($info['extension']))) {
-                $media_info = getimagesize($root . $info['dirname'] . $base . '.' . strtoupper($info['extension']));
-            } elseif (file_exists($root . $info['dirname'] . $base . '.' . $info['extension'])) {
+            if (file_exists($root . $info['dirname'] . $base . '.' . $info['extension'])) {
                 $media_info = getimagesize($root . $info['dirname'] . $base . '.' . $info['extension']);
+            } elseif (file_exists($root . $info['dirname'] . $base . '.' . strtoupper($info['extension']))) {
+                $media_info = getimagesize($root . $info['dirname'] . $base . '.' . strtoupper($info['extension']));
             } else {
-                // L'image originale n'est plus présente ou accessible
+                // L'image originale n'est plus présente et accessible
                 return false;
             }
         }
 
         if ($media_info !== false) {
             // Détermination de l'orientation de l'image
-            $sens = ($media_info[0] > $media_info[1] ? 'landscape' : 'portrait');
+            $orientation = ($media_info[0] > $media_info[1] ? 'landscape' : 'portrait');
             if (!is_null($dim)) {
                 $dim = $media_info;
             }

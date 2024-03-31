@@ -16,7 +16,7 @@ $this->registerModule(
     'Kozlika, Franck Paul',
     '5.1',
     [
-        'requires'    => [['core', '2.28']],
+        'requires'    => [['core', '2.30']],
         'permissions' => 'My',
         'type'        => 'plugin',
 
