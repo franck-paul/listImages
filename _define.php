@@ -14,7 +14,7 @@ $this->registerModule(
     'listImages',
     'List images from entries',
     'Kozlika, Franck Paul',
-    '5.2',
+    '5.3',
     [
         'requires'    => [['core', '2.30']],
         'permissions' => 'My',
