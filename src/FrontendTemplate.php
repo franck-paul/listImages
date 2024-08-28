@@ -83,7 +83,7 @@ class FrontendTemplate
         $img_dim  = isset($attr['img_dim']) ? trim((string) $attr['img_dim']) : 'none';
         $def_size = isset($attr['def_size']) ? trim((string) $attr['def_size']) : '';
 
-        return '<?php echo ' . FrontendHelper::class . '::EntryImages(' .
+        return '<?= ' . FrontendHelper::class . '::EntryImages(' .
         "'" . addslashes($size) . "', " .
         "'" . addslashes($html_tag) . "', " .
         "'" . addslashes($link) . "', " .
@@ -97,6 +97,6 @@ class FrontendTemplate
         "'" . addslashes($alt) . "', " .
         "'" . addslashes($img_dim) . "', " .
         "'" . addslashes($def_size) . "'" .
-            '); ?>';
+            ') ?>';
     }
 }
