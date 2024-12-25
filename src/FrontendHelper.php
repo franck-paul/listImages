@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @brief listImages, a plugin for Dotclear 2
  *
@@ -113,7 +114,7 @@ class FrontendHelper
 
         // Contruction du pattern de recherche de la source des images dans les balises img
         // -> à noter que seules les images locales sont traitées
-        $p_site       = (string) preg_replace('#^(.+?//.+?)/(.*)$#', '$1', App::blog()->url());
+        $p_site       = (string) preg_replace('#^(.+?//.+?)/(.*)$#', '$1', (string) App::blog()->url());
         $pattern_path = '(?:' . preg_quote($p_site, '/') . ')?' . preg_quote($p_url, '/');
         $pattern_src  = sprintf('/src="%s(.*?\.(?:' . implode('|', self::$extensions) . '))"/msui', $pattern_path);
 
@@ -207,19 +208,13 @@ class FrontendHelper
                                         // Si un lien est requis
                                         if ($link === 'image') {
                                             // Lien vers l'image originale
-                                            $href = self::ContentImageLookup($p_root, $i, 'o', $orientation, $dim, $sizes, 'o');
-                                            $href = $p_url . (dirname($i) != '/' ? dirname($i) : '') . '/' . $href;
-                                            switch ($bubble) {
-                                                case 'entry':
-                                                    $href_title = Html::escapeHTML($rs->post_title);
-
-                                                    break;
-                                                case 'image':
-                                                default:
-                                                    $href_title = $img_alt;
-
-                                                    break;
-                                            }
+                                            $href       = self::ContentImageLookup($p_root, $i, 'o', $orientation, $dim, $sizes, 'o');
+                                            $href       = $p_url . (dirname($i) != '/' ? dirname($i) : '') . '/' . $href;
+                                            $href_title = match ($bubble) {
+                                                'entry' => Html::escapeHTML($rs->post_title),
+                                                // default also stands for 'image'
+                                                default => $img_alt,
+                                            };
                                         } else {
                                             // Lien vers le billet d'origine
                                             $href       = $rs->getURL();
@@ -330,7 +325,7 @@ class FrontendHelper
         $info = Path::info($img);
         $base = $info['base'];
 
-        if (!str_ends_with($info['dirname'], '/')) {
+        if (!str_ends_with((string) $info['dirname'], '/')) {
             $info['dirname'] .= '/';
         }
 
@@ -342,12 +337,12 @@ class FrontendHelper
         $thumb_prefix = App::media()->getThumbnailPrefix();
         if ($thumb_prefix !== '.') {
             // Exclude . (hidden files) and prefixed thumbnails
-            $pattern_prefix = sprintf('(\.|%s)', preg_quote($thumb_prefix));
+            $pattern_prefix = sprintf('(\.|%s)', preg_quote((string) $thumb_prefix));
         } else {
             // Exclude . (hidden files)
             $pattern_prefix = '\.';
         }
-        if (preg_match('/^' . $pattern_prefix . '(.+)_(' . $sizes . ')$/', $base, $m)) {
+        if (preg_match('/^' . $pattern_prefix . '(.+)_(' . $sizes . ')$/', (string) $base, $m)) {
             $base = $m[1];
         }
 
@@ -403,8 +398,8 @@ class FrontendHelper
             // Récupération des dimensions de l'image originale
             if (file_exists($root . $info['dirname'] . $base . '.' . $info['extension'])) {
                 $media_info = getimagesize($root . $info['dirname'] . $base . '.' . $info['extension']);
-            } elseif (file_exists($root . $info['dirname'] . $base . '.' . strtoupper($info['extension']))) {
-                $media_info = getimagesize($root . $info['dirname'] . $base . '.' . strtoupper($info['extension']));
+            } elseif (file_exists($root . $info['dirname'] . $base . '.' . strtoupper((string) $info['extension']))) {
+                $media_info = getimagesize($root . $info['dirname'] . $base . '.' . strtoupper((string) $info['extension']));
             } else {
                 // L'image originale n'est plus présente et accessible
                 return false;
