@@ -83,7 +83,6 @@ class FrontendHelper
             $link = 'image';
         }
 
-        $exif = (bool) $exif;
         if (!preg_match('/^entry|image|none$/', $legend)) {
             $legend = 'none';
         }
@@ -132,7 +131,7 @@ class FrontendHelper
 
         if (!$rs->isEmpty()) {
             // Recherche dans le contenu du billet
-            $subject = ($from != 'content' ? $rs->post_excerpt_xhtml : '') . ($from != 'excerpt' ? $rs->post_content_xhtml : '');
+            $subject = ($from !== 'content' ? $rs->post_excerpt_xhtml : '') . ($from !== 'excerpt' ? $rs->post_content_xhtml : '');
 
             if (preg_match_all('/<img(.*?)\/\>/msu', $subject, $m) > 0) {
                 // Récupération du nombre d'images trouvées
@@ -150,7 +149,7 @@ class FrontendHelper
                     for ($idx = $start; $idx < $length; ++$idx) {
                         // Récupération de la source de l'image dans le contenu (attribut src de la balise img)
                         $i = (preg_match($pattern_src, $m[1][$idx], $src) ? $src[1] : '');
-                        if ($i != '') {
+                        if ($i !== '') {
                             // Recherche de l'image au format demandé
                             $orientation = '';
                             $dim         = [];
@@ -209,7 +208,7 @@ class FrontendHelper
                                         if ($link === 'image') {
                                             // Lien vers l'image originale
                                             $href       = self::ContentImageLookup($p_root, $i, 'o', $orientation, $dim, $sizes, 'o');
-                                            $href       = $p_url . (dirname($i) != '/' ? dirname($i) : '') . '/' . $href;
+                                            $href       = $p_url . (dirname($i) !== '/' ? dirname($i) : '') . '/' . $href;
                                             $href_title = match ($bubble) {
                                                 'entry' => Html::escapeHTML($rs->post_title),
                                                 // default also stands for 'image'
@@ -305,8 +304,6 @@ class FrontendHelper
      * @param      array<int|string, mixed>|null    $dim       The image dimension if found
      * @param      string                           $sizes     The possible image sizes (pattern)
      * @param      string                           $def_size  The default size to provided if requested not found
-     *
-     * @return     bool|string
      */
     private static function ContentImageLookup(
         string $root,
@@ -335,13 +332,10 @@ class FrontendHelper
 
         // Suppression du suffixe rajouté pour la création des miniatures s'il existe dans le nom de l'image
         $thumb_prefix = App::media()->getThumbnailPrefix();
-        if ($thumb_prefix !== '.') {
-            // Exclude . (hidden files) and prefixed thumbnails
-            $pattern_prefix = sprintf('(\.|%s)', preg_quote((string) $thumb_prefix));
-        } else {
-            // Exclude . (hidden files)
-            $pattern_prefix = '\.';
-        }
+
+        // Exclude . (hidden files) and prefixed thumbnails (if thumb prefix is .)
+        $pattern_prefix = $thumb_prefix !== '.' ? sprintf('(\.|%s)', preg_quote((string) $thumb_prefix)) : '\.';
+
         if (preg_match('/^' . $pattern_prefix . '(.+)_(' . $sizes . ')$/', (string) $base, $m)) {
             $base = $m[1];
         }
