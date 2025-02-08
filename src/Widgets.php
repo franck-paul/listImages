@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @brief listImages, a plugin for Dotclear 2
  *
