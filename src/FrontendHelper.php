@@ -114,7 +114,7 @@ class FrontendHelper
         // Contruction du pattern de recherche de la source des images dans les balises img
         // -> à noter que seules les images locales sont traitées
         $p_site       = (string) preg_replace('#^(.+?//.+?)/(.*)$#', '$1', (string) App::blog()->url());
-        $pattern_path = '(?:' . preg_quote($p_site, '/') . ')?' . preg_quote($p_url, '/');
+        $pattern_path = '(?:' . preg_quote($p_site, '/') . ')?' . preg_quote((string) $p_url, '/');
         $pattern_src  = sprintf('/src="%s(.*?\.(?:' . implode('|', self::$extensions) . '))"/msui', $pattern_path);
 
         // Buffer de retour
