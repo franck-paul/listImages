@@ -15,9 +15,9 @@ $this->registerModule(
     'listImages',
     'List images from entries',
     'Kozlika, Franck Paul',
-    '5.5',
+    '5.6',
     [
-        'date'        => '2025-02-08T17:03:32+0100',
+        'date'        => '2025-02-26T16:08:11+0100',
         'requires'    => [['core', '2.30']],
         'permissions' => 'My',
         'type'        => 'plugin',
