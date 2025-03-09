@@ -133,7 +133,7 @@ class FrontendHelper
             // Recherche dans le contenu du billet
             $subject = ($from !== 'content' ? $rs->post_excerpt_xhtml : '') . ($from !== 'excerpt' ? $rs->post_content_xhtml : '');
 
-            if (preg_match_all('/<img(.*?)\/\>/msu', $subject, $m) > 0) {
+            if (preg_match_all('/<img(.*?)\/?\>/msu', $subject, $m) > 0) {
                 // Récupération du nombre d'images trouvées
                 $img_count = count($m[0]);
 
@@ -287,7 +287,7 @@ class FrontendHelper
             }
         }
 
-        if ($res !== '' && $res !== '0') {
+        if ($res !== '') {
             return $res;
         }
 

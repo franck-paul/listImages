@@ -25,5 +25,6 @@ $this->registerModule(
         'details'    => 'https://open-time.net/?q=listImages',
         'support'    => 'https://github.com/franck-paul/listImages',
         'repository' => 'https://raw.githubusercontent.com/franck-paul/listImages/main/dcstore.xml',
+        'license'    => 'gpl2',
     ]
 );
