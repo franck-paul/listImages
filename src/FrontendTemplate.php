@@ -16,6 +16,7 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\listImages;
 
 use ArrayObject;
+use Dotclear\Plugin\TemplateHelper\Code;
 
 class FrontendTemplate
 {
@@ -46,35 +47,23 @@ class FrontendTemplate
      */
     public static function EntryImages(array|ArrayObject $attr): string
     {
-        // Récupération des attributs
-        $size     = isset($attr['size']) ? trim((string) $attr['size']) : '';
-        $html_tag = isset($attr['html_tag']) ? trim((string) $attr['html_tag']) : '';
-        $link     = isset($attr['link']) ? trim((string) $attr['link']) : '';
-        $exif     = isset($attr['exif']) ? 1 : 0;
-        $legend   = isset($attr['legend']) ? trim((string) $attr['legend']) : '';
-        $bubble   = isset($attr['bubble']) ? trim((string) $attr['bubble']) : '';
-        $from     = isset($attr['from']) ? trim((string) $attr['from']) : '';
-        $start    = isset($attr['start']) ? (int) $attr['start'] : 1;
-        $length   = isset($attr['length']) ? (int) $attr['length'] : 0;
-        $class    = isset($attr['class']) ? trim((string) $attr['class']) : '';
-        $alt      = isset($attr['alt']) ? trim((string) $attr['alt']) : 'inherit';
-        $img_dim  = isset($attr['img_dim']) ? trim((string) $attr['img_dim']) : 'none';
-        $def_size = isset($attr['def_size']) ? trim((string) $attr['def_size']) : '';
-
-        return '<?= ' . FrontendHelper::class . '::EntryImages(' .
-        "'" . addslashes($size) . "', " .
-        "'" . addslashes($html_tag) . "', " .
-        "'" . addslashes($link) . "', " .
-        $exif . ', ' .
-        "'" . addslashes($legend) . "', " .
-        "'" . addslashes($bubble) . "', " .
-        "'" . addslashes($from) . "', " .
-        $start . ', ' .
-        $length . ', ' .
-        "'" . addslashes($class) . "', " .
-        "'" . addslashes($alt) . "', " .
-        "'" . addslashes($img_dim) . "', " .
-        "'" . addslashes($def_size) . "'" .
-            ') ?>';
+        return Code::getPHPCode(
+            FrontendTemplateCode::EntryImages(...),
+            [
+                isset($attr['size']) ? trim((string) $attr['size']) : '',
+                isset($attr['html_tag']) ? trim((string) $attr['html_tag']) : '',
+                isset($attr['link']) ? trim((string) $attr['link']) : '',
+                isset($attr['exif']) ? 1 : 0,
+                isset($attr['legend']) ? trim((string) $attr['legend']) : '',
+                isset($attr['bubble']) ? trim((string) $attr['bubble']) : '',
+                isset($attr['from']) ? trim((string) $attr['from']) : '',
+                isset($attr['start']) ? (int) $attr['start'] : 1,
+                isset($attr['length']) ? (int) $attr['length'] : 0,
+                isset($attr['class']) ? trim((string) $attr['class']) : '',
+                isset($attr['alt']) ? trim((string) $attr['alt']) : 'inherit',
+                isset($attr['img_dim']) ? trim((string) $attr['img_dim']) : 'none',
+                isset($attr['def_size']) ? trim((string) $attr['def_size']) : '',
+            ]
+        );
     }
 }

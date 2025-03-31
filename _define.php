@@ -17,8 +17,11 @@ $this->registerModule(
     'Kozlika, Franck Paul',
     '5.7',
     [
-        'date'        => '2025-03-09T10:55:17+0100',
-        'requires'    => [['core', '2.30']],
+        'date'     => '2025-03-09T10:55:17+0100',
+        'requires' => [
+            ['core', '2.34'],
+            ['TemplateHelper'],
+        ],
         'permissions' => 'My',
         'type'        => 'plugin',
 
