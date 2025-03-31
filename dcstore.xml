@@ -1,12 +1,12 @@
 <modules xmlns:da="http://dotaddict.org/da/">
   <module id="listImages">
     <name>listImages</name>
-    <version>5.7</version>
+    <version>6.0</version>
     <author>Kozlika, Franck Paul</author>
     <desc>List images from entries</desc>
-    <date>2025-03-09T10:55:17+0100</date>
-    <file>https://github.com/franck-paul/listImages/releases/download/5.7/plugin-listImages-5.7.zip</file>
-    <da:dcmin>2.30</da:dcmin>
+    <date>2025-03-31T09:44:34+0200</date>
+    <file>https://github.com/franck-paul/listImages/releases/download/6.0/plugin-listImages-6.0.zip</file>
+    <da:dcmin>2.34</da:dcmin>
     <da:details>https://open-time.net/?q=listImages</da:details>
     <da:support>https://github.com/franck-paul/listImages</da:support>
   </module>
