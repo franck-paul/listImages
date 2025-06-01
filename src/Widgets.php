@@ -27,7 +27,8 @@ class Widgets
                 __('List entry images'),
                 FrontendWidgets::renderWidget(...),
                 null,
-                __('List entry images by listImages plugin')
+                __('List entry images by listImages plugin'),
+                My::id()
             )
 
             // Titre du widget
