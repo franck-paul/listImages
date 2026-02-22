@@ -365,11 +365,13 @@ class FrontendHelper
                 }
             }
         } else {
-            // Recherche d'alternative
             if ($def_size === 'none') {
                 // Pas d'alternative demandée
                 return false;
-            } elseif ($def_size === 'sq') {
+            }
+
+            // Recherche d'alternative
+            if ($def_size === 'sq') {
                 // Alternative square est demandée
                 return self::ContentImageLookup($root, $img, 'sq', $orientation, $dim, $sizes, 'none');
             }
