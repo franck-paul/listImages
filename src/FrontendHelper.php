@@ -107,14 +107,14 @@ class FrontendHelper
         $length = (max($length, 0));
 
         // Récupération de l'URL du dossier public
-        $p_url = App::blog()->settings()->system->public_url;
+        $p_url = is_string($p_url = App::blog()->settings()->system->public_url) ? $p_url : '';
         // Récupération du chemin du dossier public
         $p_root = App::blog()->publicPath();
 
         // Contruction du pattern de recherche de la source des images dans les balises img
         // -> à noter que seules les images locales sont traitées
         $p_site       = (string) preg_replace('#^(.+?//.+?)/(.*)$#', '$1', (string) App::blog()->url());
-        $pattern_path = '(?:' . preg_quote($p_site, '/') . ')?' . preg_quote((string) $p_url, '/');
+        $pattern_path = '(?:' . preg_quote($p_site, '/') . ')?' . preg_quote($p_url, '/');
         $pattern_src  = sprintf('/src="%s(.*?\.(?:' . implode('|', self::$extensions) . '))"/msui', $pattern_path);
 
         // Buffer de retour
@@ -125,13 +125,18 @@ class FrontendHelper
             $rs = App::frontend()->context()->posts;
         }
 
-        if (is_null($rs)) {
+        if (!$rs instanceof MetaRecord) {
             return '';
         }
 
         if (!$rs->isEmpty()) {
             // Recherche dans le contenu du billet
-            $subject = ($from !== 'content' ? $rs->post_excerpt_xhtml : '') . ($from !== 'excerpt' ? $rs->post_content_xhtml : '');
+            $excerpt = is_string($excerpt = $rs->post_excerpt_xhtml) ? $excerpt : '';
+            $content = is_string($content = $rs->post_content_xhtml) ? $content : '';
+            $subject = ($from !== 'content' ? $excerpt : '') . ($from !== 'excerpt' ? $content : '');
+
+            $url        = is_string($url = $rs->getURL()) ? $url : '';
+            $post_title = is_string($post_title = $rs->post_title) ? $post_title : '';
 
             if (preg_match_all('/<img(.*?)\/?\>/msu', $subject, $m) > 0) {
                 // Récupération du nombre d'images trouvées
@@ -152,8 +157,14 @@ class FrontendHelper
                         if ($i !== '') {
                             // Recherche de l'image au format demandé
                             $orientation = '';
-                            $dim         = [];
-                            if (($src_img = self::ContentImageLookup($p_root, $i, $size, $orientation, $dim, $sizes, $def_size)) !== false) {
+                            /**
+                             * @var array{0: int, 1: int}
+                             */
+                            $dimensions = [
+                                0,  // width
+                                0,  // height
+                            ];
+                            if (($src_img = self::ContentImageLookup($p_root, $i, $size, $orientation, $dimensions, $sizes, $def_size)) !== false) {
                                 // L'image existe, on construit son URL
                                 $src_img = $p_url . (dirname($i) !== '/' ? dirname($i) : '') . '/' . $src_img;
                                 // Recherche alt et title
@@ -173,9 +184,11 @@ class FrontendHelper
                                         }
                                     } else {
                                         // On utilise le titre du billet
-                                        $img_legend = $rs->post_title;
-                                        // La légende est liée au billet
-                                        $img_legend = '<a class="link_entry" href="' . $rs->getURL() . '" title="' . sprintf(__('Go to entry %s'), $img_legend) . '">' . $img_legend . '</a>';
+                                        $img_legend = Html::escapeHTML($post_title);
+                                        if ($img_legend !== '') {
+                                            // La légende est liée au billet
+                                            $img_legend = '<a class="link_entry" href="' . $url . '" title="' . sprintf(__('Go to entry %s'), $img_legend) . '">' . $img_legend . '</a>';
+                                        }
                                     }
                                 }
 
@@ -185,7 +198,7 @@ class FrontendHelper
                                         // Le titre est déjà positionné
                                     } else {
                                         // On utilise le titre du billet
-                                        $img_title = Html::escapeHTML($rs->post_title);
+                                        $img_title = Html::escapeHTML($post_title);
                                     }
                                 } else {
                                     // Pas de titre sur l'image
@@ -207,17 +220,17 @@ class FrontendHelper
                                         // Si un lien est requis
                                         if ($link === 'image') {
                                             // Lien vers l'image originale
-                                            $href       = self::ContentImageLookup($p_root, $i, 'o', $orientation, $dim, $sizes, 'o');
+                                            $href       = self::ContentImageLookup($p_root, $i, 'o', $orientation, $dimensions, $sizes, 'o');
                                             $href       = $p_url . (dirname($i) !== '/' ? dirname($i) : '') . '/' . $href;
                                             $href_title = match ($bubble) {
-                                                'entry' => Html::escapeHTML($rs->post_title),
+                                                'entry' => Html::escapeHTML($post_title),
                                                 // default also stands for 'image'
                                                 default => $img_alt,
                                             };
                                         } else {
                                             // Lien vers le billet d'origine
-                                            $href       = $rs->getURL();
-                                            $href_title = Html::escapeHTML($rs->post_title);
+                                            $href       = $url;
+                                            $href_title = Html::escapeHTML($post_title);
                                         }
 
                                         $res .= '<a class="link_' . $link . '" href="' . $href . '" title="' . $href_title . '">';
@@ -237,8 +250,13 @@ class FrontendHelper
                                 }
 
                                 // Mise en place des dimensions de l'image si pas explicitement exclu
-                                if ($img_dim !== 'none' && is_array($dim) && count($dim) >= 1) {
-                                    $res .= 'width="' . $dim[0] . '" height="' . $dim[1] . '" ';
+                                if ($img_dim !== 'none') {
+                                    if ($dimensions[0] > 0) {
+                                        $res .= 'width="' . $dimensions[0] . '" ';
+                                    }
+                                    if ($dimensions[1] > 0) {
+                                        $res .= 'height="' . $dimensions[1] . '" ';
+                                    }
                                 }
 
                                 $res .= 'alt="' . $img_alt . '" ' . ($img_title == '' ? '' : 'title="' . $img_title . '" ') . '>';
@@ -287,33 +305,29 @@ class FrontendHelper
             }
         }
 
-        if ($res !== '') {
-            return $res;
-        }
-
-        return '';
+        return $res;
     }
 
     /**
      * Fonction utilitaire de recherche d'une image selon un format spécifié (indique aussi l'orientation)
      *
-     * @param      string                           $root      The root
-     * @param      string                           $img       The image
-     * @param      string                           $size      The requested size
-     * @param      string                           $orientation      The image orientation
-     * @param      array<int|string, mixed>|null    $dim       The image dimension if found
-     * @param      string                           $sizes     The possible image sizes (pattern)
-     * @param      string                           $def_size  The default size to provided if requested not found
+     * @param      string                           $root           The root
+     * @param      string                           $img            The image
+     * @param      string                           $size           The requested size
+     * @param      string                           $orientation    The image orientation
+     * @param      array<int>                       $dim            The image dimension if found
+     * @param      string                           $sizes          The possible image sizes (pattern)
+     * @param      string                           $def_size       The default size to provided if requested not found
      */
     private static function ContentImageLookup(
         string $root,
         string $img,
         string $size,
         string &$orientation,
-        ?array &$dim,
+        array &$dim,
         string $sizes,
         string $def_size = 'o'
-    ): bool|string {
+    ): false|string {
         // Init
         $media_info = false;
         $res        = false;
@@ -405,9 +419,10 @@ class FrontendHelper
         if ($media_info !== false) {
             // Détermination de l'orientation de l'image
             $orientation = ($media_info[0] > $media_info[1] ? 'landscape' : 'portrait');
-            if (!is_null($dim)) {
-                $dim = $media_info;
-            }
+            $dim         = [
+                $media_info[0], // Width, see getimagesize()
+                $media_info[1], // Height, see getimagesize()
+            ];
 
             if ($res) {
                 return $res;

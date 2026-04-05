@@ -50,19 +50,19 @@ class FrontendTemplate
         return Code::getPHPCode(
             FrontendTemplateCode::EntryImages(...),
             [
-                isset($attr['size']) ? trim((string) $attr['size']) : '',
-                isset($attr['html_tag']) ? trim((string) $attr['html_tag']) : '',
-                isset($attr['link']) ? trim((string) $attr['link']) : '',
+                isset($attr['size'])     && is_string($attr['size']) ? trim($attr['size']) : '',
+                isset($attr['html_tag']) && is_string($attr['html_tag']) ? trim($attr['html_tag']) : '',
+                isset($attr['link'])     && is_string($attr['link']) ? trim($attr['link']) : '',
                 isset($attr['exif']) ? 1 : 0,
-                isset($attr['legend']) ? trim((string) $attr['legend']) : '',
-                isset($attr['bubble']) ? trim((string) $attr['bubble']) : '',
-                isset($attr['from']) ? trim((string) $attr['from']) : '',
-                isset($attr['start']) ? (int) $attr['start'] : 1,
-                isset($attr['length']) ? (int) $attr['length'] : 0,
-                isset($attr['class']) ? trim((string) $attr['class']) : '',
-                isset($attr['alt']) ? trim((string) $attr['alt']) : 'inherit',
-                isset($attr['img_dim']) ? trim((string) $attr['img_dim']) : 'none',
-                isset($attr['def_size']) ? trim((string) $attr['def_size']) : '',
+                isset($attr['legend'])   && is_string($attr['legend']) ? trim($attr['legend']) : '',
+                isset($attr['bubble'])   && is_string($attr['bubble']) ? trim($attr['bubble']) : '',
+                isset($attr['from'])     && is_string($attr['from']) ? trim($attr['from']) : '',
+                isset($attr['start'])    && is_numeric($attr['start']) ? (int) $attr['start'] : 1,
+                isset($attr['length'])   && is_numeric($attr['length']) ? (int) $attr['length'] : 0,
+                isset($attr['class'])    && is_string($attr['class']) ? trim($attr['class']) : '',
+                isset($attr['alt'])      && is_string($attr['alt']) ? trim($attr['alt']) : 'inherit',
+                isset($attr['img_dim'])  && is_string($attr['img_dim']) ? trim($attr['img_dim']) : 'none',
+                isset($attr['def_size']) && is_string($attr['def_size']) ? trim($attr['def_size']) : '',
             ]
         );
     }
