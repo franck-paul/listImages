@@ -254,6 +254,7 @@ class FrontendHelper
                                     if ($dimensions[0] > 0) {
                                         $res .= 'width="' . $dimensions[0] . '" ';
                                     }
+
                                     if ($dimensions[1] > 0) {
                                         $res .= 'height="' . $dimensions[1] . '" ';
                                     }
@@ -365,6 +366,7 @@ class FrontendHelper
                     break;
                 }
             }
+
             if ($res === false && $thumb_prefix !== '.') {
                 // Recherche avec . comme préfixe de miniature
                 foreach (self::$extensions as $extension) {
