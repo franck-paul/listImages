@@ -131,12 +131,12 @@ class FrontendHelper
 
         if (!$rs->isEmpty()) {
             // Recherche dans le contenu du billet
-            $excerpt = is_string($excerpt = $rs->post_excerpt_xhtml) ? $excerpt : '';
-            $content = is_string($content = $rs->post_content_xhtml) ? $content : '';
+            $excerpt = $rs->strField('post_excerpt_xhtml');
+            $content = $rs->strField('post_content_xhtml');
             $subject = ($from !== 'content' ? $excerpt : '') . ($from !== 'excerpt' ? $content : '');
 
             $url        = is_string($url = $rs->getURL()) ? $url : '';
-            $post_title = is_string($post_title = $rs->post_title) ? $post_title : '';
+            $post_title = $rs->strField('post_title');
 
             if (preg_match_all('/<img(.*?)\/?\>/msu', $subject, $m) > 0) {
                 // Récupération du nombre d'images trouvées
