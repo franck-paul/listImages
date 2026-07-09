@@ -136,7 +136,7 @@ class FrontendHelper
             $content = $rs->strField('post_content_xhtml');
             $subject = ($from !== 'content' ? $excerpt : '') . ($from !== 'excerpt' ? $content : '');
 
-            $url        = is_string($url = $rs->getURL()) ? $url : '';
+            $url        = $rs->getURL();
             $post_title = $rs->strField('post_title');
 
             if (preg_match_all('/<img(.*?)\/?\>/msu', $subject, $m) > 0) {
