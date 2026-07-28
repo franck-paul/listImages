@@ -33,8 +33,8 @@ class FrontendWidgets
         }
 
         // Si l'affichage du widget est demandé sur la page d'accueil uniquement et qu'on y est pas, on ressort
-        if (($w->homeonly === 1 && !App::url()->isHome(App::url()->getType()))
-            || ($w->homeonly === 2 && App::url()->isHome(App::url()->getType()))
+        if (($w->homeonly == 1 && !App::url()->isHome(App::url()->getType()))
+            || ($w->homeonly == 2 && App::url()->isHome(App::url()->getType()))
         ) {
             return '';
         }
