@@ -122,10 +122,7 @@ class FrontendHelper
         $res = '';
 
         // Si aucune liste de billet n'est fournie en paramètre, on utilise le contexte courant
-        if (is_null($rs)) {
-            $rs = App::frontend()->context()->posts;
-        }
-
+        $rs ??= App::frontend()->context()->posts;
         if (!$rs instanceof MetaRecord) {
             return '';
         }
