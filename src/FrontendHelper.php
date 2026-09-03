@@ -50,7 +50,7 @@ class FrontendHelper
      * @param      string           $alt       The alternate
      * @param      string           $img_dim   The image dim
      * @param      string           $def_size  The definition size
-     * @param      null|MetaRecord  $rs        { parameter_description }
+     * @param      null|MetaRecord  $metaRecord        { parameter_description }
      */
     public static function EntryImages(
         string $size,
@@ -66,7 +66,7 @@ class FrontendHelper
         string $alt,
         string $img_dim,
         string $def_size,
-        ?MetaRecord $rs = null
+        ?MetaRecord $metaRecord = null
     ): string {
         // Contrôle des valeurs fournies et définition de la valeur par défaut pour les attributs
         $media = App::media();
@@ -122,19 +122,19 @@ class FrontendHelper
         $res = '';
 
         // Si aucune liste de billet n'est fournie en paramètre, on utilise le contexte courant
-        $rs ??= App::frontend()->context()->posts;
-        if (!$rs instanceof MetaRecord) {
+        $metaRecord ??= App::frontend()->context()->posts;
+        if (!$metaRecord instanceof MetaRecord) {
             return '';
         }
 
-        if (!$rs->isEmpty()) {
+        if (!$metaRecord->isEmpty()) {
             // Recherche dans le contenu du billet
-            $excerpt = $rs->strField('post_excerpt_xhtml');
-            $content = $rs->strField('post_content_xhtml');
+            $excerpt = $metaRecord->strField('post_excerpt_xhtml');
+            $content = $metaRecord->strField('post_content_xhtml');
             $subject = ($from !== 'content' ? $excerpt : '') . ($from !== 'excerpt' ? $content : '');
 
-            $url        = $rs->getURL();
-            $post_title = $rs->strField('post_title');
+            $url        = $metaRecord->getURL();
+            $post_title = $metaRecord->strField('post_title');
 
             if (preg_match_all('/<img(.*?)\/?\>/msu', $subject, $m) > 0) {
                 // Récupération du nombre d'images trouvées

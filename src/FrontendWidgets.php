@@ -24,17 +24,17 @@ class FrontendWidgets
     // Code de traitement du widget
     // ----------------------------
 
-    public static function renderWidget(WidgetsElement $w): string
+    public static function renderWidget(WidgetsElement $widgetsElement): string
     {
         $params = [];
         // Si l'affichage du widget est désactivé, on ressort
-        if ($w->offline) {
+        if ($widgetsElement->offline) {
             return '';
         }
 
         // Si l'affichage du widget est demandé sur la page d'accueil uniquement et qu'on y est pas, on ressort
-        if (($w->homeonly == 1 && !App::url()->isHome(App::url()->getType()))
-            || ($w->homeonly == 2 && App::url()->isHome(App::url()->getType()))
+        if (($widgetsElement->homeonly == 1 && !App::url()->isHome(App::url()->getType()))
+            || ($widgetsElement->homeonly == 2 && App::url()->isHome(App::url()->getType()))
         ) {
             return '';
         }
@@ -43,19 +43,19 @@ class FrontendWidgets
         $params['no_content'] = false;
 
         // Récupération de la limite du nb de billets dans lesquels rechercher des images
-        $limit = is_numeric($limit = $w->get('limit')) ? abs((int) $limit) : 0;
+        $limit = is_numeric($limit = $widgetsElement->get('limit')) ? abs((int) $limit) : 0;
         if ($limit > 0) {
             $params['limit'] = $limit;
         }
 
         // Récupération de la ou des catégories spécifiées
-        $category = is_string($category = $w->get('category')) ? $category : '';
+        $category = is_string($category = $widgetsElement->get('category')) ? $category : '';
         if ($category !== '') {
             $params['cat_url'] = explode(',', $category);
         }
 
         // Récupération de l'indicateur de billet sélectionné
-        $selected = is_numeric($selected = $w->get('selected')) && (bool) $selected;
+        $selected = is_numeric($selected = $widgetsElement->get('selected')) && (bool) $selected;
         if ($selected) {
             $params['post_selected'] = '1';
         }
@@ -64,22 +64,22 @@ class FrontendWidgets
         $rs = App::blog()->getPosts($params);
 
         // Récupération des options d'affichage des images
-        $size     = is_string($size = $w->get('size')) ? $size : '';
-        $html_tag = is_string($html_tag = $w->get('html_tag')) ? $html_tag : '';
-        $link     = is_string($link = $w->get('link')) ? $link : '';
+        $size     = is_string($size = $widgetsElement->get('size')) ? $size : '';
+        $html_tag = is_string($html_tag = $widgetsElement->get('html_tag')) ? $html_tag : '';
+        $link     = is_string($link = $widgetsElement->get('link')) ? $link : '';
         $exif     = 0;
-        $legend   = is_string($legend = $w->get('legend')) ? $legend : '';
-        $bubble   = is_string($bubble = $w->get('bubble')) ? $bubble : '';
-        $from     = is_string($from = $w->get('from')) ? $from : '';
-        $start    = is_numeric($start = $w->get('start')) ? abs((int) $start) : 0;
-        $length   = is_numeric($length = $w->get('length')) ? abs((int) $length) : 0;
-        $class    = $w->class;
-        $alt      = is_string($alt = $w->get('alt')) ? $alt : '';
-        $img_dim  = is_string($img_dim = $w->get('img_dim')) ? $img_dim : '';
-        $def_size = is_string($def_size = $w->get('def_size')) ? $def_size : '';
+        $legend   = is_string($legend = $widgetsElement->get('legend')) ? $legend : '';
+        $bubble   = is_string($bubble = $widgetsElement->get('bubble')) ? $bubble : '';
+        $from     = is_string($from = $widgetsElement->get('from')) ? $from : '';
+        $start    = is_numeric($start = $widgetsElement->get('start')) ? abs((int) $start) : 0;
+        $length   = is_numeric($length = $widgetsElement->get('length')) ? abs((int) $length) : 0;
+        $class    = $widgetsElement->class;
+        $alt      = is_string($alt = $widgetsElement->get('alt')) ? $alt : '';
+        $img_dim  = is_string($img_dim = $widgetsElement->get('img_dim')) ? $img_dim : '';
+        $def_size = is_string($def_size = $widgetsElement->get('def_size')) ? $def_size : '';
 
         // Début d'affichage
-        $ret = ($w->title ? $w->renderTitle(Html::escapeHTML($w->title)) : '');
+        $ret = ($widgetsElement->title ? $widgetsElement->renderTitle(Html::escapeHTML($widgetsElement->title)) : '');
         $ret .= '<' . ($html_tag === 'li' ? 'ul' : 'div') . ' class="listimages-wrapper">';
 
         // Appel de la fonction de traitement pour chacun des billets
@@ -105,6 +105,6 @@ class FrontendWidgets
         // Fin d'affichage
         $ret .= '</' . ($html_tag === 'li' ? 'ul' : 'div') . '>' . "\n";
 
-        return $w->renderDiv((bool) $w->content_only, 'listimages-widget ' . $w->class, '', $ret);
+        return $widgetsElement->renderDiv((bool) $widgetsElement->content_only, 'listimages-widget ' . $widgetsElement->class, '', $ret);
     }
 }

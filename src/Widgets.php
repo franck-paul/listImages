@@ -19,9 +19,9 @@ use Dotclear\Plugin\widgets\WidgetsStack;
 
 class Widgets
 {
-    public static function initWidgets(WidgetsStack $w): string
+    public static function initWidgets(WidgetsStack $widgetsStack): string
     {
-        $w
+        $widgetsStack
             ->create(
                 'EntryImages',
                 __('List entry images'),
