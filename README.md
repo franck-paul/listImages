@@ -164,7 +164,7 @@ Pour styler plus aisément les séries d'images générées par EntryImages, il 
     }
 .post.entryimages span.landscape a {
     display: block;
-    padding: 21px 8px 20px 8px;
+    padding-block-start: 21px; padding-block-end: 20px; padding-inline-start: 8px; padding-inline-end: 8px;
     background: #eee;
     border: 1px solid #DDD;
     border-right: 1px solid #ccc;
@@ -173,7 +173,7 @@ Pour styler plus aisément les séries d'images générées par EntryImages, il 
     }
 .post.entryimages span.portrait a {
     display: block;
-    padding: 8px 21px 8px 20px;
+    padding-block-start: 8px; padding-block-end: 8px; padding-inline-start: 20px; padding-inline-end: 21px;
     background: #eee;
     border: 1px solid #DDD;
     border-right: 1px solid #ccc;
@@ -216,10 +216,12 @@ hr.clearer {
     width: 260px;
     height: 280px;
     float: left;
-    margin-right: 10px;
-    margin-bottom: 10px;
+    margin-inside-end: 10px;
+    margin-block-end: 10px;
     background: #f5f5f0;
-    padding: 10px 0 8px;
+    padding-block-start: 10px;
+    padding-block-end: 8px;
+    padding-inline: 0;
     border: 1px solid #DDD;
     }
 .outer_landscape div, .outer_landscape .legend, .outer_portrait div, .outer_portrait .legend {
