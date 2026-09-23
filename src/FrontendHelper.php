@@ -176,9 +176,6 @@ class FrontendHelper
                                         if ($img_title !== '' || $img_alt !== '') {
                                             // On utilise l'attribut title s'il existe sinon l'attribut alt s'il existe
                                             $img_legend = ($img_title !== '' ? $img_title : $img_alt);
-                                        } else {
-                                            // Aucune légende n'est possible pour l'image
-                                            $img_legend = '';
                                         }
                                     } else {
                                         // On utilise le titre du billet
