@@ -28,14 +28,12 @@ class FrontendWidgets
     {
         $params = [];
         // Si l'affichage du widget est désactivé, on ressort
-        if ($widgetsElement->offline) {
+        if ($widgetsElement->isOffline()) {
             return '';
         }
 
         // Si l'affichage du widget est demandé sur la page d'accueil uniquement et qu'on y est pas, on ressort
-        if (($widgetsElement->homeonly == 1 && !App::url()->isHome(App::url()->getType()))
-            || ($widgetsElement->homeonly == 2 && App::url()->isHome(App::url()->getType()))
-        ) {
+        if (!$widgetsElement->checkHomeOnly(App::url()->getType())) {
             return '';
         }
 
@@ -73,13 +71,13 @@ class FrontendWidgets
         $from     = is_string($from = $widgetsElement->get('from')) ? $from : '';
         $start    = is_numeric($start = $widgetsElement->get('start')) ? abs((int) $start) : 0;
         $length   = is_numeric($length = $widgetsElement->get('length')) ? abs((int) $length) : 0;
-        $class    = $widgetsElement->class;
+        $class    = $widgetsElement->getClass();
         $alt      = is_string($alt = $widgetsElement->get('alt')) ? $alt : '';
         $img_dim  = is_string($img_dim = $widgetsElement->get('img_dim')) ? $img_dim : '';
         $def_size = is_string($def_size = $widgetsElement->get('def_size')) ? $def_size : '';
 
         // Début d'affichage
-        $ret = ($widgetsElement->title ? $widgetsElement->renderTitle(Html::escapeHTML($widgetsElement->title)) : '');
+        $ret = ($widgetsElement->getTitle() !== '' ? $widgetsElement->renderTitle(Html::escapeHTML($widgetsElement->getTitle())) : '');
         $ret .= '<' . ($html_tag === 'li' ? 'ul' : 'div') . ' class="listimages-wrapper">';
 
         // Appel de la fonction de traitement pour chacun des billets
@@ -105,6 +103,6 @@ class FrontendWidgets
         // Fin d'affichage
         $ret .= '</' . ($html_tag === 'li' ? 'ul' : 'div') . '>' . "\n";
 
-        return $widgetsElement->renderDiv((bool) $widgetsElement->content_only, 'listimages-widget ' . $widgetsElement->class, '', $ret);
+        return $widgetsElement->renderDiv($widgetsElement->getContentOnly(), 'listimages-widget ' . $widgetsElement->getClass(), '', $ret);
     }
 }
