@@ -114,8 +114,8 @@ class FrontendHelper
 
         // Contruction du pattern de recherche de la source des images dans les balises img
         // -> à noter que seules les images locales sont traitées
-        $p_site       = (string) preg_replace('#^(.+?//.+?)/(.*)$#', '$1', (string) App::blog()->url());
-        $pattern_path = '(?:' . preg_quote($p_site, '/') . ')?' . preg_quote((string) $p_url, '/');
+        $p_site       = (string) preg_replace('#^(.+?//.+?)/(.*)$#', '$1', App::blog()->url());
+        $pattern_path = '(?:' . preg_quote($p_site, '/') . ')?' . preg_quote($p_url, '/');
         $pattern_src  = sprintf('/src="%s(.*?\.(?:' . implode('|', self::$extensions) . '))"/msui', $pattern_path);
 
         // Buffer de retour
@@ -332,7 +332,7 @@ class FrontendHelper
         $info = Path::info($img);
         $base = $info['base'];
 
-        if (!str_ends_with((string) $info['dirname'], '/')) {
+        if (!str_ends_with($info['dirname'], '/')) {
             $info['dirname'] .= '/';
         }
 
@@ -344,9 +344,9 @@ class FrontendHelper
         $thumb_prefix = App::media()->getThumbnailPrefix();
 
         // Exclude . (hidden files) and prefixed thumbnails (if thumb prefix is .)
-        $pattern_prefix = $thumb_prefix !== '.' ? sprintf('(\.|%s)', preg_quote((string) $thumb_prefix)) : '\.';
+        $pattern_prefix = $thumb_prefix !== '.' ? sprintf('(\.|%s)', preg_quote($thumb_prefix)) : '\.';
 
-        if (preg_match('/^' . $pattern_prefix . '(.+)_(' . $sizes . ')$/', (string) $base, $m)) {
+        if (preg_match('/^' . $pattern_prefix . '(.+)_(' . $sizes . ')$/', $base, $m)) {
             $base = $m[1];
         }
 
@@ -405,8 +405,8 @@ class FrontendHelper
             // Récupération des dimensions de l'image originale
             if (file_exists($root . $info['dirname'] . $base . '.' . $info['extension'])) {
                 $media_info = getimagesize($root . $info['dirname'] . $base . '.' . $info['extension']);
-            } elseif (file_exists($root . $info['dirname'] . $base . '.' . strtoupper((string) $info['extension']))) {
-                $media_info = getimagesize($root . $info['dirname'] . $base . '.' . strtoupper((string) $info['extension']));
+            } elseif (file_exists($root . $info['dirname'] . $base . '.' . strtoupper($info['extension']))) {
+                $media_info = getimagesize($root . $info['dirname'] . $base . '.' . strtoupper($info['extension']));
             } else {
                 // L'image originale n'est plus présente et accessible
                 return false;
