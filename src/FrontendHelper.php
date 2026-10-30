@@ -255,7 +255,7 @@ class FrontendHelper
                                     }
                                 }
 
-                                $res .= 'alt="' . $img_alt . '" ' . ($img_title == '' ? '' : 'title="' . $img_title . '" ') . '>';
+                                $res .= 'alt="' . $img_alt . '" ' . ($img_title === '' ? '' : 'title="' . $img_title . '" ') . '>';
                                 if ($html_tag !== 'none') {
                                     // Fin de la balise englobante
                                     if ($link !== 'none') {
