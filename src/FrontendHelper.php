@@ -71,35 +71,35 @@ class FrontendHelper
         // Contrôle des valeurs fournies et définition de la valeur par défaut pour les attributs
         $media = App::media();
         $sizes = implode('|', array_keys($media->getThumbSizes()));
-        if (!preg_match('/^' . $sizes . '|o' . '$/', $size)) {
+        if (!(bool) preg_match('/^' . $sizes . '|o' . '$/', $size)) {
             $size = 't';
         }
 
-        if (!preg_match('/^span|li|div|none$/', $html_tag)) {
+        if (!(bool) preg_match('/^span|li|div|none$/', $html_tag)) {
             $html_tag = 'span';
         }
 
-        if (!preg_match('/^entry|image|none$/', $link)) {
+        if (!(bool) preg_match('/^entry|image|none$/', $link)) {
             $link = 'image';
         }
 
-        if (!preg_match('/^entry|image|none$/', $legend)) {
+        if (!(bool) preg_match('/^entry|image|none$/', $legend)) {
             $legend = 'none';
         }
 
-        if (!preg_match('/^entry|image|none$/', $bubble)) {
+        if (!(bool) preg_match('/^entry|image|none$/', $bubble)) {
             $bubble = 'image';
         }
 
-        if (!preg_match('/^excerpt|content|full$/', $from)) {
+        if (!(bool) preg_match('/^excerpt|content|full$/', $from)) {
             $from = 'full';
         }
 
-        if (!preg_match('/^none|inherit$/', $alt)) {
+        if (!(bool) preg_match('/^none|inherit$/', $alt)) {
             $alt = 'inherit';
         }
 
-        if (!preg_match('/^sq|o|none$/', $def_size)) {
+        if (!(bool) preg_match('/^sq|o|none$/', $def_size)) {
             $def_size = 'o';
         }
 
@@ -151,7 +151,7 @@ class FrontendHelper
 
                     for ($idx = $start; $idx < $length; ++$idx) {
                         // Récupération de la source de l'image dans le contenu (attribut src de la balise img)
-                        $i = (preg_match($pattern_src, $m[1][$idx], $src) ? $src[1] : '');
+                        $i = (bool) preg_match($pattern_src, $m[1][$idx], $src) ? $src[1] : '';
                         if ($i !== '') {
                             // Recherche de l'image au format demandé
                             $orientation = '';
@@ -166,8 +166,8 @@ class FrontendHelper
                                 // L'image existe, on construit son URL
                                 $src_img = $p_url . (dirname($i) !== '/' ? dirname($i) : '') . '/' . $src_img;
                                 // Recherche alt et title
-                                $img_alt    = (preg_match('/alt="(.*?)"/msu', $m[1][$idx], $alt_value) ? $alt_value[1] : '');
-                                $img_title  = (preg_match('/title="(.*?)"/msu', $m[1][$idx], $title_value) ? $title_value[1] : '');
+                                $img_alt    = (bool) preg_match('/alt="(.*?)"/msu', $m[1][$idx], $alt_value) ? $alt_value[1] : '';
+                                $img_title  = (bool) preg_match('/title="(.*?)"/msu', $m[1][$idx], $title_value) ? $title_value[1] : '';
                                 $img_legend = '';
                                 if ($legend !== 'none') {
                                     // Une légende est requise
@@ -346,7 +346,7 @@ class FrontendHelper
         // Exclude . (hidden files) and prefixed thumbnails (if thumb prefix is .)
         $pattern_prefix = $thumb_prefix !== '.' ? sprintf('(\.|%s)', preg_quote($thumb_prefix)) : '\.';
 
-        if (preg_match('/^' . $pattern_prefix . '(.+)_(' . $sizes . ')$/', $base, $m)) {
+        if ((bool) preg_match('/^' . $pattern_prefix . '(.+)_(' . $sizes . ')$/', $base, $m)) {
             $base = $m[1];
         }
 
@@ -421,9 +421,7 @@ class FrontendHelper
                 $media_info[1], // Height, see getimagesize()
             ];
 
-            if ($res) {
-                return $res;
-            }
+            return $res;
         }
 
         return false;
