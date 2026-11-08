@@ -18,9 +18,9 @@ if (isset($this) && is_object($this) && method_exists($this, 'registerModule') &
         'listImages',
         'List images from entries',
         'Kozlika, Franck Paul',
-        '9.0',
+        '10.0',
         [
-            'date'     => '2026-08-03T10:03:13+0200',
+            'date'     => '2026-11-08T10:16:24+0100',
             'requires' => [
                 ['core', '2.40'],
                 ['TemplateHelper'],
